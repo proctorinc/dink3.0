@@ -4,7 +4,12 @@
 package com.dink3.jooq;
 
 
+import com.dink3.jooq.tables.Accounts;
+import com.dink3.jooq.tables.Institutions;
+import com.dink3.jooq.tables.PlaidItems;
 import com.dink3.jooq.tables.RefreshTokens;
+import com.dink3.jooq.tables.Transactions;
+import com.dink3.jooq.tables.UserSubscriptions;
 import com.dink3.jooq.tables.Users;
 
 
@@ -15,9 +20,34 @@ import com.dink3.jooq.tables.Users;
 public class Tables {
 
     /**
+     * The table <code>accounts</code>.
+     */
+    public static final Accounts ACCOUNTS = Accounts.ACCOUNTS;
+
+    /**
+     * The table <code>institutions</code>.
+     */
+    public static final Institutions INSTITUTIONS = Institutions.INSTITUTIONS;
+
+    /**
+     * The table <code>plaid_items</code>.
+     */
+    public static final PlaidItems PLAID_ITEMS = PlaidItems.PLAID_ITEMS;
+
+    /**
      * The table <code>refresh_tokens</code>.
      */
     public static final RefreshTokens REFRESH_TOKENS = RefreshTokens.REFRESH_TOKENS;
+
+    /**
+     * The table <code>transactions</code>.
+     */
+    public static final Transactions TRANSACTIONS = Transactions.TRANSACTIONS;
+
+    /**
+     * The table <code>user_subscriptions</code>.
+     */
+    public static final UserSubscriptions USER_SUBSCRIPTIONS = UserSubscriptions.USER_SUBSCRIPTIONS;
 
     /**
      * The table <code>users</code>.

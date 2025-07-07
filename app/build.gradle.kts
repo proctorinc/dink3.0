@@ -52,6 +52,7 @@ dependencies {
     implementation("org.slf4j:slf4j-api:2.0.13")
     runtimeOnly("ch.qos.logback:logback-classic:1.4.14")
     jooqGenerator("org.slf4j:slf4j-simple:2.0.13")
+    implementation("com.plaid:plaid-java:12.0.0")
 }
 
 testing {

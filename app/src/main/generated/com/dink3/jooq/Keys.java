@@ -4,9 +4,19 @@
 package com.dink3.jooq;
 
 
+import com.dink3.jooq.tables.Accounts;
+import com.dink3.jooq.tables.Institutions;
+import com.dink3.jooq.tables.PlaidItems;
 import com.dink3.jooq.tables.RefreshTokens;
+import com.dink3.jooq.tables.Transactions;
+import com.dink3.jooq.tables.UserSubscriptions;
 import com.dink3.jooq.tables.Users;
+import com.dink3.jooq.tables.records.AccountsRecord;
+import com.dink3.jooq.tables.records.InstitutionsRecord;
+import com.dink3.jooq.tables.records.PlaidItemsRecord;
 import com.dink3.jooq.tables.records.RefreshTokensRecord;
+import com.dink3.jooq.tables.records.TransactionsRecord;
+import com.dink3.jooq.tables.records.UserSubscriptionsRecord;
 import com.dink3.jooq.tables.records.UsersRecord;
 
 import org.jooq.ForeignKey;
@@ -27,7 +37,13 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final UniqueKey<AccountsRecord> ACCOUNTS__PK_ACCOUNTS = Internal.createUniqueKey(Accounts.ACCOUNTS, DSL.name("pk_accounts"), new TableField[] { Accounts.ACCOUNTS.ID }, true);
+    public static final UniqueKey<InstitutionsRecord> INSTITUTIONS__PK_INSTITUTIONS = Internal.createUniqueKey(Institutions.INSTITUTIONS, DSL.name("pk_institutions"), new TableField[] { Institutions.INSTITUTIONS.ID }, true);
+    public static final UniqueKey<InstitutionsRecord> INSTITUTIONS__UK_INSTITUTIONS_46871336 = Internal.createUniqueKey(Institutions.INSTITUTIONS, DSL.name("uk_institutions_46871336"), new TableField[] { Institutions.INSTITUTIONS.PLAID_INSTITUTION_ID }, true);
+    public static final UniqueKey<PlaidItemsRecord> PLAID_ITEMS__PK_PLAID_ITEMS = Internal.createUniqueKey(PlaidItems.PLAID_ITEMS, DSL.name("pk_plaid_items"), new TableField[] { PlaidItems.PLAID_ITEMS.ID }, true);
     public static final UniqueKey<RefreshTokensRecord> REFRESH_TOKENS__PK_REFRESH_TOKENS = Internal.createUniqueKey(RefreshTokens.REFRESH_TOKENS, DSL.name("pk_refresh_tokens"), new TableField[] { RefreshTokens.REFRESH_TOKENS.ID }, true);
+    public static final UniqueKey<TransactionsRecord> TRANSACTIONS__PK_TRANSACTIONS = Internal.createUniqueKey(Transactions.TRANSACTIONS, DSL.name("pk_transactions"), new TableField[] { Transactions.TRANSACTIONS.ID }, true);
+    public static final UniqueKey<UserSubscriptionsRecord> USER_SUBSCRIPTIONS__PK_USER_SUBSCRIPTIONS = Internal.createUniqueKey(UserSubscriptions.USER_SUBSCRIPTIONS, DSL.name("pk_user_subscriptions"), new TableField[] { UserSubscriptions.USER_SUBSCRIPTIONS.ID }, true);
     public static final UniqueKey<UsersRecord> USERS__PK_USERS = Internal.createUniqueKey(Users.USERS, DSL.name("pk_users"), new TableField[] { Users.USERS.ID }, true);
     public static final UniqueKey<UsersRecord> USERS__UK_USERS_116436086 = Internal.createUniqueKey(Users.USERS, DSL.name("uk_users_116436086"), new TableField[] { Users.USERS.EMAIL }, true);
 
@@ -35,5 +51,7 @@ public class Keys {
     // FOREIGN KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final ForeignKey<PlaidItemsRecord, UsersRecord> PLAID_ITEMS__FK_PLAID_ITEMS_PK_USERS = Internal.createForeignKey(PlaidItems.PLAID_ITEMS, DSL.name("fk_plaid_items_pk_users"), new TableField[] { PlaidItems.PLAID_ITEMS.USER_ID }, Keys.USERS__PK_USERS, new TableField[] { Users.USERS.ID }, true);
     public static final ForeignKey<RefreshTokensRecord, UsersRecord> REFRESH_TOKENS__FK_REFRESH_TOKENS_PK_USERS = Internal.createForeignKey(RefreshTokens.REFRESH_TOKENS, DSL.name("fk_refresh_tokens_pk_users"), new TableField[] { RefreshTokens.REFRESH_TOKENS.USER_ID }, Keys.USERS__PK_USERS, new TableField[] { Users.USERS.ID }, true);
+    public static final ForeignKey<UserSubscriptionsRecord, UsersRecord> USER_SUBSCRIPTIONS__FK_USER_SUBSCRIPTIONS_PK_USERS = Internal.createForeignKey(UserSubscriptions.USER_SUBSCRIPTIONS, DSL.name("fk_user_subscriptions_pk_users"), new TableField[] { UserSubscriptions.USER_SUBSCRIPTIONS.USER_ID }, Keys.USERS__PK_USERS, new TableField[] { Users.USERS.ID }, true);
 }

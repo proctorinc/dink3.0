@@ -6,7 +6,9 @@ package com.dink3.jooq.tables;
 
 import com.dink3.jooq.DefaultSchema;
 import com.dink3.jooq.Keys;
+import com.dink3.jooq.tables.PlaidItems.PlaidItemsPath;
 import com.dink3.jooq.tables.RefreshTokens.RefreshTokensPath;
+import com.dink3.jooq.tables.UserSubscriptions.UserSubscriptionsPath;
 import com.dink3.jooq.tables.records.UsersRecord;
 
 import java.util.Arrays;
@@ -169,6 +171,18 @@ public class Users extends TableImpl<UsersRecord> {
         return Arrays.asList(Keys.USERS__UK_USERS_116436086);
     }
 
+    private transient PlaidItemsPath _plaidItems;
+
+    /**
+     * Get the implicit to-many join path to the <code>plaid_items</code> table
+     */
+    public PlaidItemsPath plaidItems() {
+        if (_plaidItems == null)
+            _plaidItems = new PlaidItemsPath(this, null, Keys.PLAID_ITEMS__FK_PLAID_ITEMS_PK_USERS.getInverseKey());
+
+        return _plaidItems;
+    }
+
     private transient RefreshTokensPath _refreshTokens;
 
     /**
@@ -180,6 +194,19 @@ public class Users extends TableImpl<UsersRecord> {
             _refreshTokens = new RefreshTokensPath(this, null, Keys.REFRESH_TOKENS__FK_REFRESH_TOKENS_PK_USERS.getInverseKey());
 
         return _refreshTokens;
+    }
+
+    private transient UserSubscriptionsPath _userSubscriptions;
+
+    /**
+     * Get the implicit to-many join path to the <code>user_subscriptions</code>
+     * table
+     */
+    public UserSubscriptionsPath userSubscriptions() {
+        if (_userSubscriptions == null)
+            _userSubscriptions = new UserSubscriptionsPath(this, null, Keys.USER_SUBSCRIPTIONS__FK_USER_SUBSCRIPTIONS_PK_USERS.getInverseKey());
+
+        return _userSubscriptions;
     }
 
     @Override

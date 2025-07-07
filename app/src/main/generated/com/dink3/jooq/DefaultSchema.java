@@ -4,7 +4,12 @@
 package com.dink3.jooq;
 
 
+import com.dink3.jooq.tables.Accounts;
+import com.dink3.jooq.tables.Institutions;
+import com.dink3.jooq.tables.PlaidItems;
 import com.dink3.jooq.tables.RefreshTokens;
+import com.dink3.jooq.tables.Transactions;
+import com.dink3.jooq.tables.UserSubscriptions;
 import com.dink3.jooq.tables.Users;
 
 import java.util.Arrays;
@@ -29,9 +34,34 @@ public class DefaultSchema extends SchemaImpl {
     public static final DefaultSchema DEFAULT_SCHEMA = new DefaultSchema();
 
     /**
+     * The table <code>accounts</code>.
+     */
+    public final Accounts ACCOUNTS = Accounts.ACCOUNTS;
+
+    /**
+     * The table <code>institutions</code>.
+     */
+    public final Institutions INSTITUTIONS = Institutions.INSTITUTIONS;
+
+    /**
+     * The table <code>plaid_items</code>.
+     */
+    public final PlaidItems PLAID_ITEMS = PlaidItems.PLAID_ITEMS;
+
+    /**
      * The table <code>refresh_tokens</code>.
      */
     public final RefreshTokens REFRESH_TOKENS = RefreshTokens.REFRESH_TOKENS;
+
+    /**
+     * The table <code>transactions</code>.
+     */
+    public final Transactions TRANSACTIONS = Transactions.TRANSACTIONS;
+
+    /**
+     * The table <code>user_subscriptions</code>.
+     */
+    public final UserSubscriptions USER_SUBSCRIPTIONS = UserSubscriptions.USER_SUBSCRIPTIONS;
 
     /**
      * The table <code>users</code>.
@@ -54,7 +84,12 @@ public class DefaultSchema extends SchemaImpl {
     @Override
     public final List<Table<?>> getTables() {
         return Arrays.asList(
+            Accounts.ACCOUNTS,
+            Institutions.INSTITUTIONS,
+            PlaidItems.PLAID_ITEMS,
             RefreshTokens.REFRESH_TOKENS,
+            Transactions.TRANSACTIONS,
+            UserSubscriptions.USER_SUBSCRIPTIONS,
             Users.USERS
         );
     }

@@ -10,4 +10,9 @@ server:
   port: 8080
 jwt:
   secret: "change-this-to-a-very-long-random-string-32bytes!"
-  expiration: 3600000 # 1 hour in ms 
+  expiration: 3600000 # 1 hour in ms
+plaid:
+  environment: sandbox
+  client-id: "your-plaid-client-id"
+  secret: "your-plaid-secret"
+  webhook-url: "http://localhost:8080/api/v1/plaid/webhook" 

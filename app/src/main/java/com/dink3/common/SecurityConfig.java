@@ -24,7 +24,13 @@ public class SecurityConfig {
                     "/swagger-resources/**",
                     "/webjars/**"
                 ).permitAll()
-                .requestMatchers("/api/v1/users/me").authenticated()
+                .requestMatchers(
+                    "/api/v1/users/me",
+                    "/api/v1/accounts/**",
+                    "/api/v1/transactions/**",
+                    "/api/v1/institutions/**",
+                    "/api/v1/plaid/**"
+                ).authenticated()
                 .anyRequest().permitAll()
             )
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
