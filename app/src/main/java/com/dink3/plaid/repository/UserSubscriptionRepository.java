@@ -23,13 +23,13 @@ public class UserSubscriptionRepository {
         userSubscriptionsDao.update(subscription);
     }
 
-    public Optional<UserSubscriptions> findByUserId(Integer userId) {
+    public Optional<UserSubscriptions> findByUserId(String userId) {
         return userSubscriptionsDao.findAll().stream()
                 .filter(subscription -> subscription.getUserId().equals(userId))
                 .findFirst();
     }
 
-    public Optional<UserSubscriptions> findById(Integer id) {
+    public Optional<UserSubscriptions> findById(String id) {
         return Optional.ofNullable(userSubscriptionsDao.findById(id));
     }
 } 

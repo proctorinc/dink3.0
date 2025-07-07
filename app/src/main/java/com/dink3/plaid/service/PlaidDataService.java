@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
+import com.dink3.util.UuidGenerator;
 
 @Service
 public class PlaidDataService {
@@ -83,7 +84,7 @@ public class PlaidDataService {
     /**
      * Get a specific account by ID
      */
-    public Optional<Accounts> getAccountById(Integer accountId, Users user) {
+    public Optional<Accounts> getAccountById(String accountId, Users user) {
         return accountRepository.findById(accountId)
                 .filter(account -> {
                     // Verify the account belongs to the user
@@ -111,7 +112,7 @@ public class PlaidDataService {
     /**
      * Get a specific transaction by ID
      */
-    public Optional<Transactions> getTransactionById(Integer transactionId, Users user) {
+    public Optional<Transactions> getTransactionById(String transactionId, Users user) {
         return transactionRepository.findById(transactionId)
                 .filter(transaction -> {
                     // Verify the transaction belongs to the user
@@ -134,7 +135,7 @@ public class PlaidDataService {
     /**
      * Get a specific institution by ID
      */
-    public Optional<Institutions> getInstitutionById(Integer institutionId) {
+    public Optional<Institutions> getInstitutionById(String institutionId) {
         return institutionRepository.findById(institutionId);
     }
     
@@ -149,6 +150,7 @@ public class PlaidDataService {
         
         // Create default basic subscription
         UserSubscriptions subscription = new UserSubscriptions();
+        subscription.setId(UuidGenerator.generateUuid());
         subscription.setUserId(user.getId());
         subscription.setTier("basic");
         subscription.setCreatedAt(LocalDateTime.now().toString());

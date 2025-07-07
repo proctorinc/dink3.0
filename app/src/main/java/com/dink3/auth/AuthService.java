@@ -16,6 +16,7 @@ import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
+import com.dink3.util.UuidGenerator;
 
 @Service
 public class AuthService {
@@ -37,6 +38,7 @@ public class AuthService {
     public Users register(String email, String username, String password) {
         String hashed = passwordHasher.hash(password);
         Users user = new Users();
+        user.setId(UuidGenerator.generateUuid());
         user.setEmail(email);
         user.setUsername(username);
         user.setPasswordHash(hashed);

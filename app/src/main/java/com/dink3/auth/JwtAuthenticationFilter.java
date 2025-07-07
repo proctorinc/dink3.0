@@ -40,7 +40,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();
-                Integer userId = Integer.valueOf(claims.getSubject());
+                String userId = claims.getSubject();
                 Optional<Users> userOpt = userService.getUserById(userId);
                 if (userOpt.isPresent()) {
                     Users user = userOpt.get();

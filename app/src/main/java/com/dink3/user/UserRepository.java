@@ -15,7 +15,7 @@ public class UserRepository {
         this.usersDao = new UsersDao(configuration);
     }
 
-    public Optional<Users> findById(Integer id) {
+    public Optional<Users> findById(String id) {
         return Optional.ofNullable(usersDao.findById(id));
     }
 

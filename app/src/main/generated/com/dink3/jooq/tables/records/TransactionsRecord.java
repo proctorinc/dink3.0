@@ -21,15 +21,15 @@ public class TransactionsRecord extends UpdatableRecordImpl<TransactionsRecord> 
     /**
      * Setter for <code>transactions.id</code>.
      */
-    public void setId(Integer value) {
+    public void setId(String value) {
         set(0, value);
     }
 
     /**
      * Getter for <code>transactions.id</code>.
      */
-    public Integer getId() {
-        return (Integer) get(0);
+    public String getId() {
+        return (String) get(0);
     }
 
     /**
@@ -485,7 +485,7 @@ public class TransactionsRecord extends UpdatableRecordImpl<TransactionsRecord> 
     // -------------------------------------------------------------------------
 
     @Override
-    public Record1<Integer> key() {
+    public Record1<String> key() {
         return (Record1) super.key();
     }
 
@@ -503,7 +503,7 @@ public class TransactionsRecord extends UpdatableRecordImpl<TransactionsRecord> 
     /**
      * Create a detached, initialised TransactionsRecord
      */
-    public TransactionsRecord(Integer id, String plaidTransactionId, String plaidAccountId, Float amount, String isoCurrencyCode, String unofficialCurrencyCode, String date, String datetime, String name, String merchantName, String paymentChannel, Boolean pending, String pendingTransactionId, String accountOwner, String categoryId, String category, String locationAddress, String locationCity, String locationRegion, String locationPostalCode, String locationCountry, Float locationLat, Float locationLon, String paymentMetaReferenceNumber, String paymentMetaPayer, String paymentMetaPaymentMethod, String paymentMetaPaymentProcessor, String paymentMetaPpdId, String paymentMetaReason, String paymentMetaByOrderOf, String paymentMetaPayee, String createdAt, String updatedAt) {
+    public TransactionsRecord(String id, String plaidTransactionId, String plaidAccountId, Float amount, String isoCurrencyCode, String unofficialCurrencyCode, String date, String datetime, String name, String merchantName, String paymentChannel, Boolean pending, String pendingTransactionId, String accountOwner, String categoryId, String category, String locationAddress, String locationCity, String locationRegion, String locationPostalCode, String locationCountry, Float locationLat, Float locationLon, String paymentMetaReferenceNumber, String paymentMetaPayer, String paymentMetaPaymentMethod, String paymentMetaPaymentProcessor, String paymentMetaPpdId, String paymentMetaReason, String paymentMetaByOrderOf, String paymentMetaPayee, String createdAt, String updatedAt) {
         super(Transactions.TRANSACTIONS);
 
         setId(id);

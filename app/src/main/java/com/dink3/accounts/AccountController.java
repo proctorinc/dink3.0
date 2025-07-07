@@ -45,7 +45,7 @@ public class AccountController {
      * Get a specific account by ID
      */
     @GetMapping("/{accountId}")
-    public ResponseEntity<Accounts> getAccount(@PathVariable Integer accountId, 
+    public ResponseEntity<Accounts> getAccount(@PathVariable String accountId, 
                                               @AuthenticationPrincipal Users user) {
         if (user == null) {
             log.warn("Unauthorized access attempt to get account");

@@ -14,7 +14,6 @@ import java.util.List;
 
 import org.jooq.Condition;
 import org.jooq.Field;
-import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.PlainSQL;
 import org.jooq.QueryPart;
@@ -55,7 +54,7 @@ public class Institutions extends TableImpl<InstitutionsRecord> {
     /**
      * The column <code>institutions.id</code>.
      */
-    public final TableField<InstitutionsRecord, Integer> ID = createField(DSL.name("id"), SQLDataType.INTEGER.identity(true), this, "");
+    public final TableField<InstitutionsRecord, String> ID = createField(DSL.name("id"), SQLDataType.CLOB, this, "");
 
     /**
      * The column <code>institutions.plaid_institution_id</code>.
@@ -124,11 +123,6 @@ public class Institutions extends TableImpl<InstitutionsRecord> {
     @Override
     public Schema getSchema() {
         return aliased() ? null : DefaultSchema.DEFAULT_SCHEMA;
-    }
-
-    @Override
-    public Identity<InstitutionsRecord, Integer> getIdentity() {
-        return (Identity<InstitutionsRecord, Integer>) super.getIdentity();
     }
 
     @Override

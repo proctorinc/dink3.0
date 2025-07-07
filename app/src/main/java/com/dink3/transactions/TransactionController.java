@@ -45,7 +45,7 @@ public class TransactionController {
      * Get a specific transaction by ID
      */
     @GetMapping("/{transactionId}")
-    public ResponseEntity<Transactions> getTransaction(@PathVariable Integer transactionId, 
+    public ResponseEntity<Transactions> getTransaction(@PathVariable String transactionId, 
                                                       @AuthenticationPrincipal Users user) {
         if (user == null) {
             log.warn("Unauthorized access attempt to get transaction");

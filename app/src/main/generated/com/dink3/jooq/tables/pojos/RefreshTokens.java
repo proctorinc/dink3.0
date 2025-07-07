@@ -15,8 +15,8 @@ public class RefreshTokens implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Integer id;
-    private Integer userId;
+    private String id;
+    private String userId;
     private String token;
     private String expiresAt;
     private String createdAt;
@@ -32,8 +32,8 @@ public class RefreshTokens implements Serializable {
     }
 
     public RefreshTokens(
-        Integer id,
-        Integer userId,
+        String id,
+        String userId,
         String token,
         String expiresAt,
         String createdAt
@@ -48,28 +48,28 @@ public class RefreshTokens implements Serializable {
     /**
      * Getter for <code>refresh_tokens.id</code>.
      */
-    public Integer getId() {
+    public String getId() {
         return this.id;
     }
 
     /**
      * Setter for <code>refresh_tokens.id</code>.
      */
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
     /**
      * Getter for <code>refresh_tokens.user_id</code>.
      */
-    public Integer getUserId() {
+    public String getUserId() {
         return this.userId;
     }
 
     /**
      * Setter for <code>refresh_tokens.user_id</code>.
      */
-    public void setUserId(Integer userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

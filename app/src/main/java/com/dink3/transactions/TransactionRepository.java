@@ -36,13 +36,13 @@ public class TransactionRepository {
                 .toList();
     }
 
-    public List<Transactions> findByUserId(Integer userId) {
+    public List<Transactions> findByUserId(String userId) {
         // This would require a join with accounts and plaid_items tables
         // For now, we'll return all transactions and filter in the service layer
         return transactionsDao.findAll();
     }
 
-    public Optional<Transactions> findById(Integer id) {
+    public Optional<Transactions> findById(String id) {
         return Optional.ofNullable(transactionsDao.findById(id));
     }
 

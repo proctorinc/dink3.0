@@ -38,7 +38,7 @@ public class InstitutionController {
      * Get a specific institution by ID
      */
     @GetMapping("/{institutionId}")
-    public ResponseEntity<Institutions> getInstitution(@PathVariable Integer institutionId) {
+    public ResponseEntity<Institutions> getInstitution(@PathVariable String institutionId) {
         log.info("Getting institution: {}", institutionId);
         
         return plaidDataService.getInstitutionById(institutionId)

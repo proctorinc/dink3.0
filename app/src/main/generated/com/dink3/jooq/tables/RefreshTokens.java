@@ -16,7 +16,6 @@ import java.util.List;
 import org.jooq.Condition;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Identity;
 import org.jooq.InverseForeignKey;
 import org.jooq.Name;
 import org.jooq.Path;
@@ -60,12 +59,12 @@ public class RefreshTokens extends TableImpl<RefreshTokensRecord> {
     /**
      * The column <code>refresh_tokens.id</code>.
      */
-    public final TableField<RefreshTokensRecord, Integer> ID = createField(DSL.name("id"), SQLDataType.INTEGER.identity(true), this, "");
+    public final TableField<RefreshTokensRecord, String> ID = createField(DSL.name("id"), SQLDataType.CLOB, this, "");
 
     /**
      * The column <code>refresh_tokens.user_id</code>.
      */
-    public final TableField<RefreshTokensRecord, Integer> USER_ID = createField(DSL.name("user_id"), SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<RefreshTokensRecord, String> USER_ID = createField(DSL.name("user_id"), SQLDataType.CLOB.nullable(false), this, "");
 
     /**
      * The column <code>refresh_tokens.token</code>.
@@ -147,11 +146,6 @@ public class RefreshTokens extends TableImpl<RefreshTokensRecord> {
     @Override
     public Schema getSchema() {
         return aliased() ? null : DefaultSchema.DEFAULT_SCHEMA;
-    }
-
-    @Override
-    public Identity<RefreshTokensRecord, Integer> getIdentity() {
-        return (Identity<RefreshTokensRecord, Integer>) super.getIdentity();
     }
 
     @Override

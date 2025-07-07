@@ -15,7 +15,7 @@ public class Transactions implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Integer id;
+    private String id;
     private String plaidTransactionId;
     private String plaidAccountId;
     private Float amount;
@@ -88,7 +88,7 @@ public class Transactions implements Serializable {
     }
 
     public Transactions(
-        Integer id,
+        String id,
         String plaidTransactionId,
         String plaidAccountId,
         Float amount,
@@ -160,14 +160,14 @@ public class Transactions implements Serializable {
     /**
      * Getter for <code>transactions.id</code>.
      */
-    public Integer getId() {
+    public String getId() {
         return this.id;
     }
 
     /**
      * Setter for <code>transactions.id</code>.
      */
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

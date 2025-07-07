@@ -13,7 +13,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public Optional<Users> getUserById(Integer id) {
+    public Optional<Users> getUserById(String id) {
         return userRepository.findById(id);
     }
 

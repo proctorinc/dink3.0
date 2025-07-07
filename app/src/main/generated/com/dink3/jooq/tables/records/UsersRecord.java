@@ -21,15 +21,15 @@ public class UsersRecord extends UpdatableRecordImpl<UsersRecord> {
     /**
      * Setter for <code>users.id</code>.
      */
-    public void setId(Integer value) {
+    public void setId(String value) {
         set(0, value);
     }
 
     /**
      * Getter for <code>users.id</code>.
      */
-    public Integer getId() {
-        return (Integer) get(0);
+    public String getId() {
+        return (String) get(0);
     }
 
     /**
@@ -107,7 +107,7 @@ public class UsersRecord extends UpdatableRecordImpl<UsersRecord> {
     // -------------------------------------------------------------------------
 
     @Override
-    public Record1<Integer> key() {
+    public Record1<String> key() {
         return (Record1) super.key();
     }
 
@@ -125,7 +125,7 @@ public class UsersRecord extends UpdatableRecordImpl<UsersRecord> {
     /**
      * Create a detached, initialised UsersRecord
      */
-    public UsersRecord(Integer id, String username, String email, String passwordHash, String role, String createdAt) {
+    public UsersRecord(String id, String username, String email, String passwordHash, String role, String createdAt) {
         super(Users.USERS);
 
         setId(id);

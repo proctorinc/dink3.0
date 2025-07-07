@@ -59,13 +59,13 @@ public class AccountRepository {
                 .toList();
     }
 
-    public List<Accounts> findByUserId(Integer userId) {
+    public List<Accounts> findByUserId(String userId) {
         // This would require a join with plaid_items table
         // For now, we'll return all accounts and filter in the service layer
         return accountsDao.findAll();
     }
 
-    public Optional<Accounts> findById(Integer id) {
+    public Optional<Accounts> findById(String id) {
         return Optional.ofNullable(accountsDao.findById(id));
     }
 

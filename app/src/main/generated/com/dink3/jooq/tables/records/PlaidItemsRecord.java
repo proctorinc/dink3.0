@@ -21,29 +21,29 @@ public class PlaidItemsRecord extends UpdatableRecordImpl<PlaidItemsRecord> {
     /**
      * Setter for <code>plaid_items.id</code>.
      */
-    public void setId(Integer value) {
+    public void setId(String value) {
         set(0, value);
     }
 
     /**
      * Getter for <code>plaid_items.id</code>.
      */
-    public Integer getId() {
-        return (Integer) get(0);
+    public String getId() {
+        return (String) get(0);
     }
 
     /**
      * Setter for <code>plaid_items.user_id</code>.
      */
-    public void setUserId(Integer value) {
+    public void setUserId(String value) {
         set(1, value);
     }
 
     /**
      * Getter for <code>plaid_items.user_id</code>.
      */
-    public Integer getUserId() {
-        return (Integer) get(1);
+    public String getUserId() {
+        return (String) get(1);
     }
 
     /**
@@ -149,7 +149,7 @@ public class PlaidItemsRecord extends UpdatableRecordImpl<PlaidItemsRecord> {
     // -------------------------------------------------------------------------
 
     @Override
-    public Record1<Integer> key() {
+    public Record1<String> key() {
         return (Record1) super.key();
     }
 
@@ -167,7 +167,7 @@ public class PlaidItemsRecord extends UpdatableRecordImpl<PlaidItemsRecord> {
     /**
      * Create a detached, initialised PlaidItemsRecord
      */
-    public PlaidItemsRecord(Integer id, Integer userId, String plaidItemId, String plaidAccessToken, String plaidInstitutionId, String status, String lastWebhook, String createdAt, String updatedAt) {
+    public PlaidItemsRecord(String id, String userId, String plaidItemId, String plaidAccessToken, String plaidInstitutionId, String status, String lastWebhook, String createdAt, String updatedAt) {
         super(PlaidItems.PLAID_ITEMS);
 
         setId(id);

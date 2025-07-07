@@ -15,8 +15,8 @@ public class UserSubscriptions implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Integer id;
-    private Integer userId;
+    private String id;
+    private String userId;
     private String tier;
     private String lastSyncAt;
     private String createdAt;
@@ -34,8 +34,8 @@ public class UserSubscriptions implements Serializable {
     }
 
     public UserSubscriptions(
-        Integer id,
-        Integer userId,
+        String id,
+        String userId,
         String tier,
         String lastSyncAt,
         String createdAt,
@@ -52,28 +52,28 @@ public class UserSubscriptions implements Serializable {
     /**
      * Getter for <code>user_subscriptions.id</code>.
      */
-    public Integer getId() {
+    public String getId() {
         return this.id;
     }
 
     /**
      * Setter for <code>user_subscriptions.id</code>.
      */
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
     /**
      * Getter for <code>user_subscriptions.user_id</code>.
      */
-    public Integer getUserId() {
+    public String getUserId() {
         return this.userId;
     }
 
     /**
      * Setter for <code>user_subscriptions.user_id</code>.
      */
-    public void setUserId(Integer userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

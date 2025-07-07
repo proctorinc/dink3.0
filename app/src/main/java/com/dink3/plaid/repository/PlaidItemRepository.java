@@ -30,7 +30,7 @@ public class PlaidItemRepository {
                 .findFirst();
     }
 
-    public List<PlaidItems> findByUserId(Integer userId) {
+    public List<PlaidItems> findByUserId(String userId) {
         return plaidItemsDao.findAll().stream()
                 .filter(item -> item.getUserId().equals(userId))
                 .toList();

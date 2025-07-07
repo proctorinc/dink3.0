@@ -21,15 +21,15 @@ public class AccountsRecord extends UpdatableRecordImpl<AccountsRecord> {
     /**
      * Setter for <code>accounts.id</code>.
      */
-    public void setId(Integer value) {
+    public void setId(String value) {
         set(0, value);
     }
 
     /**
      * Getter for <code>accounts.id</code>.
      */
-    public Integer getId() {
-        return (Integer) get(0);
+    public String getId() {
+        return (String) get(0);
     }
 
     /**
@@ -219,7 +219,7 @@ public class AccountsRecord extends UpdatableRecordImpl<AccountsRecord> {
     // -------------------------------------------------------------------------
 
     @Override
-    public Record1<Integer> key() {
+    public Record1<String> key() {
         return (Record1) super.key();
     }
 
@@ -237,7 +237,7 @@ public class AccountsRecord extends UpdatableRecordImpl<AccountsRecord> {
     /**
      * Create a detached, initialised AccountsRecord
      */
-    public AccountsRecord(Integer id, String plaidItemId, String plaidAccountId, String name, String mask, String officialName, String type, String subtype, Float currentBalance, Float availableBalance, String isoCurrencyCode, String unofficialCurrencyCode, String createdAt, String updatedAt) {
+    public AccountsRecord(String id, String plaidItemId, String plaidAccountId, String name, String mask, String officialName, String type, String subtype, Float currentBalance, Float availableBalance, String isoCurrencyCode, String unofficialCurrencyCode, String createdAt, String updatedAt) {
         super(Accounts.ACCOUNTS);
 
         setId(id);

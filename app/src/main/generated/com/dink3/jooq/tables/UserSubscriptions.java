@@ -17,7 +17,6 @@ import java.util.List;
 import org.jooq.Condition;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Identity;
 import org.jooq.Index;
 import org.jooq.InverseForeignKey;
 import org.jooq.Name;
@@ -62,12 +61,12 @@ public class UserSubscriptions extends TableImpl<UserSubscriptionsRecord> {
     /**
      * The column <code>user_subscriptions.id</code>.
      */
-    public final TableField<UserSubscriptionsRecord, Integer> ID = createField(DSL.name("id"), SQLDataType.INTEGER.identity(true), this, "");
+    public final TableField<UserSubscriptionsRecord, String> ID = createField(DSL.name("id"), SQLDataType.CLOB, this, "");
 
     /**
      * The column <code>user_subscriptions.user_id</code>.
      */
-    public final TableField<UserSubscriptionsRecord, Integer> USER_ID = createField(DSL.name("user_id"), SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<UserSubscriptionsRecord, String> USER_ID = createField(DSL.name("user_id"), SQLDataType.CLOB.nullable(false), this, "");
 
     /**
      * The column <code>user_subscriptions.tier</code>.
@@ -159,11 +158,6 @@ public class UserSubscriptions extends TableImpl<UserSubscriptionsRecord> {
     @Override
     public List<Index> getIndexes() {
         return Arrays.asList(Indexes.IDX_USER_SUBSCRIPTIONS_USER_ID);
-    }
-
-    @Override
-    public Identity<UserSubscriptionsRecord, Integer> getIdentity() {
-        return (Identity<UserSubscriptionsRecord, Integer>) super.getIdentity();
     }
 
     @Override

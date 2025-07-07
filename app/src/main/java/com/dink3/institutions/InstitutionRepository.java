@@ -34,7 +34,7 @@ public class InstitutionRepository {
         return institutionsDao.findAll();
     }
 
-    public Optional<Institutions> findById(Integer id) {
+    public Optional<Institutions> findById(String id) {
         return Optional.ofNullable(institutionsDao.findById(id));
     }
 } 

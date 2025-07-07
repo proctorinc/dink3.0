@@ -15,7 +15,7 @@ public class Accounts implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Integer id;
+    private String id;
     private String plaidItemId;
     private String plaidAccountId;
     private String name;
@@ -50,7 +50,7 @@ public class Accounts implements Serializable {
     }
 
     public Accounts(
-        Integer id,
+        String id,
         String plaidItemId,
         String plaidAccountId,
         String name,
@@ -84,14 +84,14 @@ public class Accounts implements Serializable {
     /**
      * Getter for <code>accounts.id</code>.
      */
-    public Integer getId() {
+    public String getId() {
         return this.id;
     }
 
     /**
      * Setter for <code>accounts.id</code>.
      */
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

@@ -15,7 +15,7 @@ public class Institutions implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Integer id;
+    private String id;
     private String plaidInstitutionId;
     private String name;
     private String logo;
@@ -38,7 +38,7 @@ public class Institutions implements Serializable {
     }
 
     public Institutions(
-        Integer id,
+        String id,
         String plaidInstitutionId,
         String name,
         String logo,
@@ -60,14 +60,14 @@ public class Institutions implements Serializable {
     /**
      * Getter for <code>institutions.id</code>.
      */
-    public Integer getId() {
+    public String getId() {
         return this.id;
     }
 
     /**
      * Setter for <code>institutions.id</code>.
      */
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

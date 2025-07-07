@@ -21,29 +21,29 @@ public class UserSubscriptionsRecord extends UpdatableRecordImpl<UserSubscriptio
     /**
      * Setter for <code>user_subscriptions.id</code>.
      */
-    public void setId(Integer value) {
+    public void setId(String value) {
         set(0, value);
     }
 
     /**
      * Getter for <code>user_subscriptions.id</code>.
      */
-    public Integer getId() {
-        return (Integer) get(0);
+    public String getId() {
+        return (String) get(0);
     }
 
     /**
      * Setter for <code>user_subscriptions.user_id</code>.
      */
-    public void setUserId(Integer value) {
+    public void setUserId(String value) {
         set(1, value);
     }
 
     /**
      * Getter for <code>user_subscriptions.user_id</code>.
      */
-    public Integer getUserId() {
-        return (Integer) get(1);
+    public String getUserId() {
+        return (String) get(1);
     }
 
     /**
@@ -107,7 +107,7 @@ public class UserSubscriptionsRecord extends UpdatableRecordImpl<UserSubscriptio
     // -------------------------------------------------------------------------
 
     @Override
-    public Record1<Integer> key() {
+    public Record1<String> key() {
         return (Record1) super.key();
     }
 
@@ -125,7 +125,7 @@ public class UserSubscriptionsRecord extends UpdatableRecordImpl<UserSubscriptio
     /**
      * Create a detached, initialised UserSubscriptionsRecord
      */
-    public UserSubscriptionsRecord(Integer id, Integer userId, String tier, String lastSyncAt, String createdAt, String updatedAt) {
+    public UserSubscriptionsRecord(String id, String userId, String tier, String lastSyncAt, String createdAt, String updatedAt) {
         super(UserSubscriptions.USER_SUBSCRIPTIONS);
 
         setId(id);

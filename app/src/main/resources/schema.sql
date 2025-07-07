@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id TEXT PRIMARY KEY,
     username TEXT,
     email TEXT NOT NULL UNIQUE,
     password_hash TEXT NOT NULL,
@@ -8,8 +8,8 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS refresh_tokens (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
     token TEXT NOT NULL,
     expires_at TEXT NOT NULL,
     created_at TEXT NOT NULL,
@@ -18,8 +18,8 @@ CREATE TABLE IF NOT EXISTS refresh_tokens (
 
 -- Plaid Items (represents a connection to a financial institution)
 CREATE TABLE IF NOT EXISTS plaid_items (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
     plaid_item_id TEXT NOT NULL UNIQUE,
     plaid_access_token TEXT NOT NULL,
     plaid_institution_id TEXT NOT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS plaid_items (
 
 -- Institutions
 CREATE TABLE IF NOT EXISTS institutions (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id TEXT PRIMARY KEY,
     plaid_institution_id TEXT NOT NULL UNIQUE,
     name TEXT NOT NULL,
     logo TEXT,
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS institutions (
 
 -- Accounts
 CREATE TABLE IF NOT EXISTS accounts (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id TEXT PRIMARY KEY,
     plaid_item_id TEXT NOT NULL,
     plaid_account_id TEXT NOT NULL,
     name TEXT NOT NULL,
@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS accounts (
 
 -- Transactions
 CREATE TABLE IF NOT EXISTS transactions (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id TEXT PRIMARY KEY,
     plaid_transaction_id TEXT NOT NULL UNIQUE,
     plaid_account_id TEXT NOT NULL,
     amount REAL NOT NULL,
@@ -102,8 +102,8 @@ CREATE TABLE IF NOT EXISTS transactions (
 
 -- User subscription tiers for sync frequency
 CREATE TABLE IF NOT EXISTS user_subscriptions (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL UNIQUE,
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL UNIQUE,
     tier TEXT NOT NULL DEFAULT 'basic', -- 'basic' or 'premium'
     last_sync_at TEXT,
     created_at TEXT NOT NULL,

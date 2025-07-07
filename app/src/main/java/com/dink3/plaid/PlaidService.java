@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import com.dink3.util.UuidGenerator;
 
 @Service
 public class PlaidService {
@@ -86,6 +87,7 @@ public class PlaidService {
             if (response != null && response.getAccessToken() != null) {
                 // Store the item
                 PlaidItems item = new PlaidItems();
+                item.setId(UuidGenerator.generateUuid());
                 item.setUserId(user.getId());
                 item.setPlaidItemId(response.getItemId());
                 item.setPlaidAccessToken(response.getAccessToken());
@@ -175,6 +177,7 @@ public class PlaidService {
     private void storeAccount(AccountBase plaidAccount, String plaidItemId) {
         try {
             Accounts account = new Accounts();
+            account.setId(UuidGenerator.generateUuid());
             account.setPlaidItemId(plaidItemId);
             account.setPlaidAccountId(plaidAccount.getAccountId());
             account.setName(plaidAccount.getName());
@@ -217,6 +220,7 @@ public class PlaidService {
             } else {
                 // Create new transaction
                 Transactions transaction = new Transactions();
+                transaction.setId(UuidGenerator.generateUuid());
                 transaction.setPlaidTransactionId(plaidTransaction.getTransactionId());
                 transaction.setPlaidAccountId(plaidTransaction.getAccountId());
                 transaction.setAmount(plaidTransaction.getAmount().floatValue());
@@ -299,6 +303,7 @@ public class PlaidService {
                 Institution plaidInstitution = response.getInstitution();
                 
                 Institutions institution = new Institutions();
+                institution.setId(UuidGenerator.generateUuid());
                 institution.setPlaidInstitutionId(institutionId);
                 institution.setName(plaidInstitution.getName());
                 institution.setLogo(plaidInstitution.getLogo());

@@ -21,29 +21,29 @@ public class RefreshTokensRecord extends UpdatableRecordImpl<RefreshTokensRecord
     /**
      * Setter for <code>refresh_tokens.id</code>.
      */
-    public void setId(Integer value) {
+    public void setId(String value) {
         set(0, value);
     }
 
     /**
      * Getter for <code>refresh_tokens.id</code>.
      */
-    public Integer getId() {
-        return (Integer) get(0);
+    public String getId() {
+        return (String) get(0);
     }
 
     /**
      * Setter for <code>refresh_tokens.user_id</code>.
      */
-    public void setUserId(Integer value) {
+    public void setUserId(String value) {
         set(1, value);
     }
 
     /**
      * Getter for <code>refresh_tokens.user_id</code>.
      */
-    public Integer getUserId() {
-        return (Integer) get(1);
+    public String getUserId() {
+        return (String) get(1);
     }
 
     /**
@@ -93,7 +93,7 @@ public class RefreshTokensRecord extends UpdatableRecordImpl<RefreshTokensRecord
     // -------------------------------------------------------------------------
 
     @Override
-    public Record1<Integer> key() {
+    public Record1<String> key() {
         return (Record1) super.key();
     }
 
@@ -111,7 +111,7 @@ public class RefreshTokensRecord extends UpdatableRecordImpl<RefreshTokensRecord
     /**
      * Create a detached, initialised RefreshTokensRecord
      */
-    public RefreshTokensRecord(Integer id, Integer userId, String token, String expiresAt, String createdAt) {
+    public RefreshTokensRecord(String id, String userId, String token, String expiresAt, String createdAt) {
         super(RefreshTokens.REFRESH_TOKENS);
 
         setId(id);

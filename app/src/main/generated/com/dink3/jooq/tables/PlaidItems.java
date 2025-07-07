@@ -17,7 +17,6 @@ import java.util.List;
 import org.jooq.Condition;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Identity;
 import org.jooq.Index;
 import org.jooq.InverseForeignKey;
 import org.jooq.Name;
@@ -62,12 +61,12 @@ public class PlaidItems extends TableImpl<PlaidItemsRecord> {
     /**
      * The column <code>plaid_items.id</code>.
      */
-    public final TableField<PlaidItemsRecord, Integer> ID = createField(DSL.name("id"), SQLDataType.INTEGER.identity(true), this, "");
+    public final TableField<PlaidItemsRecord, String> ID = createField(DSL.name("id"), SQLDataType.CLOB, this, "");
 
     /**
      * The column <code>plaid_items.user_id</code>.
      */
-    public final TableField<PlaidItemsRecord, Integer> USER_ID = createField(DSL.name("user_id"), SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<PlaidItemsRecord, String> USER_ID = createField(DSL.name("user_id"), SQLDataType.CLOB.nullable(false), this, "");
 
     /**
      * The column <code>plaid_items.plaid_item_id</code>.
@@ -174,11 +173,6 @@ public class PlaidItems extends TableImpl<PlaidItemsRecord> {
     @Override
     public List<Index> getIndexes() {
         return Arrays.asList(Indexes.IDX_PLAID_ITEMS_USER_ID);
-    }
-
-    @Override
-    public Identity<PlaidItemsRecord, Integer> getIdentity() {
-        return (Identity<PlaidItemsRecord, Integer>) super.getIdentity();
     }
 
     @Override

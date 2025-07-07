@@ -21,15 +21,15 @@ public class InstitutionsRecord extends UpdatableRecordImpl<InstitutionsRecord> 
     /**
      * Setter for <code>institutions.id</code>.
      */
-    public void setId(Integer value) {
+    public void setId(String value) {
         set(0, value);
     }
 
     /**
      * Getter for <code>institutions.id</code>.
      */
-    public Integer getId() {
-        return (Integer) get(0);
+    public String getId() {
+        return (String) get(0);
     }
 
     /**
@@ -135,7 +135,7 @@ public class InstitutionsRecord extends UpdatableRecordImpl<InstitutionsRecord> 
     // -------------------------------------------------------------------------
 
     @Override
-    public Record1<Integer> key() {
+    public Record1<String> key() {
         return (Record1) super.key();
     }
 
@@ -153,7 +153,7 @@ public class InstitutionsRecord extends UpdatableRecordImpl<InstitutionsRecord> 
     /**
      * Create a detached, initialised InstitutionsRecord
      */
-    public InstitutionsRecord(Integer id, String plaidInstitutionId, String name, String logo, String primaryColor, String url, String createdAt, String updatedAt) {
+    public InstitutionsRecord(String id, String plaidInstitutionId, String name, String logo, String primaryColor, String url, String createdAt, String updatedAt) {
         super(Institutions.INSTITUTIONS);
 
         setId(id);

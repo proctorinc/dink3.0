@@ -15,7 +15,6 @@ import java.util.List;
 
 import org.jooq.Condition;
 import org.jooq.Field;
-import org.jooq.Identity;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.PlainSQL;
@@ -57,7 +56,7 @@ public class Accounts extends TableImpl<AccountsRecord> {
     /**
      * The column <code>accounts.id</code>.
      */
-    public final TableField<AccountsRecord, Integer> ID = createField(DSL.name("id"), SQLDataType.INTEGER.identity(true), this, "");
+    public final TableField<AccountsRecord, String> ID = createField(DSL.name("id"), SQLDataType.CLOB, this, "");
 
     /**
      * The column <code>accounts.plaid_item_id</code>.
@@ -161,11 +160,6 @@ public class Accounts extends TableImpl<AccountsRecord> {
     @Override
     public List<Index> getIndexes() {
         return Arrays.asList(Indexes.IDX_ACCOUNTS_PLAID_ITEM_ID);
-    }
-
-    @Override
-    public Identity<AccountsRecord, Integer> getIdentity() {
-        return (Identity<AccountsRecord, Integer>) super.getIdentity();
     }
 
     @Override
