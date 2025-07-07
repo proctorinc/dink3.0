@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:sqlite:./dink3-dev.db
+    driver-class-name: org.sqlite.JDBC
+    username: ''
+    password: ''
+  jooq:
+    sql-dialect: SQLITE
+server:
+  port: 8080
+jwt:
+  secret: "change-this-to-a-very-long-random-string-32bytes!"
+  expiration: 3600000 # 1 hour in ms 

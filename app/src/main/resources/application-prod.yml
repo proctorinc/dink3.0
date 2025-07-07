@@ -1,0 +1,5 @@
+spring:
+  datasource:
+    url: jdbc:sqlite:/path/to/turso.db # Replace with actual Turso connection string
+jwt:
+  secret: "prod-secret-key-change-me" 

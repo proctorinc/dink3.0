@@ -1,0 +1,14 @@
+package com.dink3.auth;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+
+public class RegisterRequest {
+    @Schema(description = "User's email", example = "user@example.com")
+    public String email;
+
+    @Schema(description = "User's username", example = "myuser")
+    public String username;
+
+    @Schema(description = "User's password", example = "StrongPassword123")
+    public String password;
+} 
