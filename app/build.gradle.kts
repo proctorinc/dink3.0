@@ -53,6 +53,11 @@ dependencies {
     runtimeOnly("ch.qos.logback:logback-classic:1.4.14")
     jooqGenerator("org.slf4j:slf4j-simple:2.0.13")
     implementation("com.plaid:plaid-java:12.0.0")
+    // Lombok for reducing boilerplate code
+    compileOnly("org.projectlombok:lombok:1.18.32")
+    annotationProcessor("org.projectlombok:lombok:1.18.32")
+    testCompileOnly("org.projectlombok:lombok:1.18.32")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.32")
 }
 
 testing {
