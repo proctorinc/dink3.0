@@ -31,11 +31,16 @@ public class AuthController {
             log.warn("Registration failed for email: {} due to weak password", email);
             return ResponseEntity.badRequest().body("Password does not meet requirements");
         }
-        Users user = authService.register(email, username, password);
-        log.info("User registered successfully: {}", email);
-        String jwt = authService.generateJwtToken(user);
-        String refresh = authService.generateRefreshToken(user);
-        return ResponseEntity.ok(Map.of("token", jwt, "refreshToken", refresh));
+        try {
+            Users user = authService.register(email, username, password);
+            log.info("User registered successfully: {}", email);
+            String jwt = authService.generateJwtToken(user);
+            String refresh = authService.generateRefreshToken(user);
+            return ResponseEntity.ok(Map.of("token", jwt, "refreshToken", refresh));
+        } catch (IllegalArgumentException e) {
+            log.warn("Registration failed for email: {} - {}", email, e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PostMapping("/login")

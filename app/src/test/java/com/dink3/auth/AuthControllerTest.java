@@ -23,8 +23,8 @@ public class AuthControllerTest {
 
     @Test
     void testRegisterLoginAndMe() throws Exception {
-        String email = "test@example.com";
-        String username = "testuser";
+        String email = "test" + System.currentTimeMillis() + "@example.com";
+        String username = "testuser" + System.currentTimeMillis();
         String password = "Password123";
         // Register
         mockMvc.perform(post("/api/v1/auth/register")
@@ -52,5 +52,34 @@ public class AuthControllerTest {
                 .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email", is(email)));
+    }
+
+    @Test
+    void testDuplicateEmailRegistration() throws Exception {
+        String email = "duplicate" + System.currentTimeMillis() + "@example.com";
+        String username = "testuser";
+        String password = "Password123";
+        
+        // First registration should succeed
+        mockMvc.perform(post("/api/v1/auth/register")
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(Map.of(
+                        "email", email,
+                        "username", username,
+                        "password", password
+                ))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.token", notNullValue()));
+        
+        // Second registration with same email should fail
+        mockMvc.perform(post("/api/v1/auth/register")
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(Map.of(
+                        "email", email,
+                        "username", "differentuser",
+                        "password", "Password456"
+                ))))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(containsString("Unable to register with the provided information")));
     }
 } 
