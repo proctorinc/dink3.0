@@ -20,6 +20,10 @@ public class InstitutionRepository {
         institutionsDao.insert(institution);
     }
 
+    public void upsert(Institution institution) {
+        institutionsDao.merge(institution);
+    }
+
     public void update(Institution institution) {
         institutionsDao.update(institution);
     }

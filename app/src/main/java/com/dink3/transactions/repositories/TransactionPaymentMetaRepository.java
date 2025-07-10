@@ -16,4 +16,8 @@ public class TransactionPaymentMetaRepository {
     public void save(TransactionPaymentMeta paymentMeta) {
         transactionPaymentMetaDao.insert(paymentMeta);
     }
+
+    public void upsert(TransactionPaymentMeta paymentMeta) {
+        transactionPaymentMetaDao.merge(paymentMeta);
+    }
 }

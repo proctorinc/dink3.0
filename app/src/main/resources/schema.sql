@@ -45,6 +45,7 @@ CREATE TABLE IF NOT EXISTS institution (
 -- Accounts
 CREATE TABLE IF NOT EXISTS account (
     id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
     plaid_item_id TEXT NOT NULL,
     plaid_account_id TEXT NOT NULL,
     name TEXT NOT NULL,
@@ -59,7 +60,8 @@ CREATE TABLE IF NOT EXISTS account (
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
     FOREIGN KEY (plaid_item_id) REFERENCES plaid_item(plaid_item_id) ON DELETE CASCADE,
-    UNIQUE(plaid_item_id, plaid_account_id)
+    UNIQUE(plaid_item_id, plaid_account_id),
+    FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS category (
@@ -77,6 +79,7 @@ CREATE TABLE IF NOT EXISTS category (
 -- Transactions
 CREATE TABLE IF NOT EXISTS `transaction` (
     id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
     plaid_transaction_id TEXT NOT NULL UNIQUE,
     plaid_account_id TEXT NOT NULL,
     category_id TEXT,
@@ -96,7 +99,8 @@ CREATE TABLE IF NOT EXISTS `transaction` (
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
     FOREIGN KEY (category_id) REFERENCES category(id) ON DELETE CASCADE,
-    FOREIGN KEY (plaid_account_id) REFERENCES account(plaid_account_id) ON DELETE CASCADE
+    FOREIGN KEY (plaid_account_id) REFERENCES account(plaid_account_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS transaction_location (
@@ -139,7 +143,9 @@ CREATE TABLE IF NOT EXISTS user_subscription (
 
 -- Indexes for better performance
 CREATE INDEX IF NOT EXISTS idx_plaid_items_user_id ON plaid_item(user_id);
+CREATE INDEX IF NOT EXISTS idx_accounts_user_id ON account(user_id);
 CREATE INDEX IF NOT EXISTS idx_accounts_plaid_item_id ON account(plaid_item_id);
+CREATE INDEX IF NOT EXISTS idx_transactions_user_id ON `transaction`(user_id);
 CREATE INDEX IF NOT EXISTS idx_transactions_plaid_account_id ON `transaction`(plaid_account_id);
 CREATE INDEX IF NOT EXISTS idx_transactions_date ON `transaction`(date);
 CREATE INDEX IF NOT EXISTS idx_user_subscriptions_user_id ON user_subscription(user_id); 

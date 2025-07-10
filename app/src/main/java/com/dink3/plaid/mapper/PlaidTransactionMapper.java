@@ -7,9 +7,10 @@ import com.dink3.util.UuidGenerator;
 import java.time.LocalDateTime;
 
 public class PlaidTransactionMapper {
-    public static Transaction toTransaction(com.plaid.client.model.Transaction plaidTransaction, String idOverride) {
+    public static Transaction toTransaction(com.plaid.client.model.Transaction plaidTransaction, String idOverride, String userId) {
         Transaction transaction = new Transaction();
         transaction.setId(idOverride != null ? idOverride : UuidGenerator.generateUuid());
+        transaction.setUserId(userId);
         transaction.setPlaidTransactionId(plaidTransaction.getTransactionId());
         transaction.setPlaidAccountId(plaidTransaction.getAccountId());
         transaction.setAmount(plaidTransaction.getAmount() != null ? plaidTransaction.getAmount().floatValue() : null);

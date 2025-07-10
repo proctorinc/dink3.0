@@ -20,10 +20,10 @@ import java.util.List;
 public class TransactionController {
     private static final Logger log = LoggerFactory.getLogger(TransactionController.class);
     
-    private final PlaidDataService plaidDataService;
+    private final TransactionService transactionService;
     
-    public TransactionController(PlaidDataService plaidDataService) {
-        this.plaidDataService = plaidDataService;
+    public TransactionController(TransactionService transactionService) {
+        this.transactionService = transactionService;
     }
     
     /**
@@ -32,7 +32,7 @@ public class TransactionController {
     @GetMapping
     public ResponseEntity<List<Transaction>> getTransactions(@AuthenticationPrincipal User user) {
         log.info("Getting transactions for user: {}", user.getId());
-        List<Transaction> transactions = plaidDataService.getUserTransactions(user);
+        List<Transaction> transactions = transactionService.getTransactionsByUserId(user.getId());
         return ResponseEntity.ok(transactions);
     }
     
@@ -44,7 +44,7 @@ public class TransactionController {
                                                       @AuthenticationPrincipal User user) {
         log.info("Getting transaction {} for user: {}", transactionId, user.getId());
         
-        return plaidDataService.getTransactionById(transactionId, user)
+        return transactionService.getTransactionByIdForUser(transactionId, user.getId())
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }

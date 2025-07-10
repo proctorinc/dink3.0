@@ -20,6 +20,10 @@ public class AccountRepository {
         accountDao.insert(account);
     }
 
+    public void upsert(Account account) {
+        accountDao.merge(account);
+    }
+
     public void saveOrUpdate(Account account) {
         // Check if account exists
         Optional<Account> existing = findByPlaidAccountId(account.getPlaidAccountId());

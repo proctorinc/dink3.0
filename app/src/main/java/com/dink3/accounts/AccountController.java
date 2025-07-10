@@ -20,10 +20,10 @@ import java.util.List;
 public class AccountController {
     private static final Logger log = LoggerFactory.getLogger(AccountController.class);
     
-    private final PlaidDataService plaidDataService;
+    private final AccountService accountService;
     
-    public AccountController(PlaidDataService plaidDataService) {
-        this.plaidDataService = plaidDataService;
+    public AccountController(AccountService accountService) {
+        this.accountService = accountService;
     }
     
     /**
@@ -32,7 +32,7 @@ public class AccountController {
     @GetMapping
     public ResponseEntity<List<Account>> getAccounts(@AuthenticationPrincipal User user) {
         log.info("Getting accounts for user: {}", user.getId());
-        List<Account> accounts = plaidDataService.getUserAccounts(user);
+        List<Account> accounts = accountService.getAccountsByUserId(user.getId());
         return ResponseEntity.ok(accounts);
     }
     
@@ -44,7 +44,7 @@ public class AccountController {
                                               @AuthenticationPrincipal User user) {
         log.info("Getting account {} for user: {}", accountId, user.getId());
         
-        return plaidDataService.getAccountById(accountId, user)
+        return accountService.getAccountByIdForUser(accountId, user.getId())
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }

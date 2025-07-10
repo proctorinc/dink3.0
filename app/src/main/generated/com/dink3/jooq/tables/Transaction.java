@@ -10,6 +10,7 @@ import com.dink3.jooq.Keys;
 import com.dink3.jooq.tables.Category.CategoryPath;
 import com.dink3.jooq.tables.TransactionLocation.TransactionLocationPath;
 import com.dink3.jooq.tables.TransactionPaymentMeta.TransactionPaymentMetaPath;
+import com.dink3.jooq.tables.User.UserPath;
 import com.dink3.jooq.tables.records.TransactionRecord;
 
 import java.util.Arrays;
@@ -64,6 +65,11 @@ public class Transaction extends TableImpl<TransactionRecord> {
      * The column <code>transaction.id</code>.
      */
     public final TableField<TransactionRecord, String> ID = createField(DSL.name("id"), SQLDataType.CLOB, this, "");
+
+    /**
+     * The column <code>transaction.user_id</code>.
+     */
+    public final TableField<TransactionRecord, String> USER_ID = createField(DSL.name("user_id"), SQLDataType.CLOB.nullable(false), this, "");
 
     /**
      * The column <code>transaction.plaid_transaction_id</code>.
@@ -224,7 +230,7 @@ public class Transaction extends TableImpl<TransactionRecord> {
 
     @Override
     public List<Index> getIndexes() {
-        return Arrays.asList(Indexes.IDX_TRANSACTIONS_DATE, Indexes.IDX_TRANSACTIONS_PLAID_ACCOUNT_ID);
+        return Arrays.asList(Indexes.IDX_TRANSACTIONS_DATE, Indexes.IDX_TRANSACTIONS_PLAID_ACCOUNT_ID, Indexes.IDX_TRANSACTIONS_USER_ID);
     }
 
     @Override
@@ -234,7 +240,19 @@ public class Transaction extends TableImpl<TransactionRecord> {
 
     @Override
     public List<ForeignKey<TransactionRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.TRANSACTION__FK_TRANSACTION_PK_CATEGORY);
+        return Arrays.asList(Keys.TRANSACTION__FK_TRANSACTION_PK_USER, Keys.TRANSACTION__FK_TRANSACTION_PK_CATEGORY);
+    }
+
+    private transient UserPath _user;
+
+    /**
+     * Get the implicit join path to the <code>user</code> table.
+     */
+    public UserPath user() {
+        if (_user == null)
+            _user = new UserPath(this, Keys.TRANSACTION__FK_TRANSACTION_PK_USER, null);
+
+        return _user;
     }
 
     private transient CategoryPath _category;

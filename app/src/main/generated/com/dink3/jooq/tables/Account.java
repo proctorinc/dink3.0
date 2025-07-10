@@ -7,6 +7,7 @@ package com.dink3.jooq.tables;
 import com.dink3.jooq.DefaultSchema;
 import com.dink3.jooq.Indexes;
 import com.dink3.jooq.Keys;
+import com.dink3.jooq.tables.User.UserPath;
 import com.dink3.jooq.tables.records.AccountRecord;
 
 import java.util.Arrays;
@@ -15,10 +16,14 @@ import java.util.List;
 
 import org.jooq.Condition;
 import org.jooq.Field;
+import org.jooq.ForeignKey;
 import org.jooq.Index;
+import org.jooq.InverseForeignKey;
 import org.jooq.Name;
+import org.jooq.Path;
 import org.jooq.PlainSQL;
 import org.jooq.QueryPart;
+import org.jooq.Record;
 import org.jooq.SQL;
 import org.jooq.Schema;
 import org.jooq.Select;
@@ -57,6 +62,11 @@ public class Account extends TableImpl<AccountRecord> {
      * The column <code>account.id</code>.
      */
     public final TableField<AccountRecord, String> ID = createField(DSL.name("id"), SQLDataType.CLOB, this, "");
+
+    /**
+     * The column <code>account.user_id</code>.
+     */
+    public final TableField<AccountRecord, String> USER_ID = createField(DSL.name("user_id"), SQLDataType.CLOB.nullable(false), this, "");
 
     /**
      * The column <code>account.plaid_item_id</code>.
@@ -152,6 +162,39 @@ public class Account extends TableImpl<AccountRecord> {
         this(DSL.name("account"), null);
     }
 
+    public <O extends Record> Account(Table<O> path, ForeignKey<O, AccountRecord> childPath, InverseForeignKey<O, AccountRecord> parentPath) {
+        super(path, childPath, parentPath, ACCOUNT);
+    }
+
+    /**
+     * A subtype implementing {@link Path} for simplified path-based joins.
+     */
+    public static class AccountPath extends Account implements Path<AccountRecord> {
+
+        private static final long serialVersionUID = 1L;
+        public <O extends Record> AccountPath(Table<O> path, ForeignKey<O, AccountRecord> childPath, InverseForeignKey<O, AccountRecord> parentPath) {
+            super(path, childPath, parentPath);
+        }
+        private AccountPath(Name alias, Table<AccountRecord> aliased) {
+            super(alias, aliased);
+        }
+
+        @Override
+        public AccountPath as(String alias) {
+            return new AccountPath(DSL.name(alias), this);
+        }
+
+        @Override
+        public AccountPath as(Name alias) {
+            return new AccountPath(alias, this);
+        }
+
+        @Override
+        public AccountPath as(Table<?> alias) {
+            return new AccountPath(alias.getQualifiedName(), this);
+        }
+    }
+
     @Override
     public Schema getSchema() {
         return aliased() ? null : DefaultSchema.DEFAULT_SCHEMA;
@@ -159,12 +202,29 @@ public class Account extends TableImpl<AccountRecord> {
 
     @Override
     public List<Index> getIndexes() {
-        return Arrays.asList(Indexes.IDX_ACCOUNTS_PLAID_ITEM_ID);
+        return Arrays.asList(Indexes.IDX_ACCOUNTS_PLAID_ITEM_ID, Indexes.IDX_ACCOUNTS_USER_ID);
     }
 
     @Override
     public UniqueKey<AccountRecord> getPrimaryKey() {
         return Keys.ACCOUNT__PK_ACCOUNT;
+    }
+
+    @Override
+    public List<ForeignKey<AccountRecord, ?>> getReferences() {
+        return Arrays.asList(Keys.ACCOUNT__FK_ACCOUNT_PK_USER);
+    }
+
+    private transient UserPath _user;
+
+    /**
+     * Get the implicit join path to the <code>user</code> table.
+     */
+    public UserPath user() {
+        if (_user == null)
+            _user = new UserPath(this, Keys.ACCOUNT__FK_ACCOUNT_PK_USER, null);
+
+        return _user;
     }
 
     @Override

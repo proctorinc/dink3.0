@@ -26,8 +26,10 @@ public class Indexes {
     // -------------------------------------------------------------------------
 
     public static final Index IDX_ACCOUNTS_PLAID_ITEM_ID = Internal.createIndex(DSL.name("idx_accounts_plaid_item_id"), Account.ACCOUNT, new OrderField[] { Account.ACCOUNT.PLAID_ITEM_ID }, false);
+    public static final Index IDX_ACCOUNTS_USER_ID = Internal.createIndex(DSL.name("idx_accounts_user_id"), Account.ACCOUNT, new OrderField[] { Account.ACCOUNT.USER_ID }, false);
     public static final Index IDX_PLAID_ITEMS_USER_ID = Internal.createIndex(DSL.name("idx_plaid_items_user_id"), PlaidItem.PLAID_ITEM, new OrderField[] { PlaidItem.PLAID_ITEM.USER_ID }, false);
     public static final Index IDX_TRANSACTIONS_DATE = Internal.createIndex(DSL.name("idx_transactions_date"), Transaction.TRANSACTION, new OrderField[] { Transaction.TRANSACTION.DATE }, false);
     public static final Index IDX_TRANSACTIONS_PLAID_ACCOUNT_ID = Internal.createIndex(DSL.name("idx_transactions_plaid_account_id"), Transaction.TRANSACTION, new OrderField[] { Transaction.TRANSACTION.PLAID_ACCOUNT_ID }, false);
+    public static final Index IDX_TRANSACTIONS_USER_ID = Internal.createIndex(DSL.name("idx_transactions_user_id"), Transaction.TRANSACTION, new OrderField[] { Transaction.TRANSACTION.USER_ID }, false);
     public static final Index IDX_USER_SUBSCRIPTIONS_USER_ID = Internal.createIndex(DSL.name("idx_user_subscriptions_user_id"), UserSubscription.USER_SUBSCRIPTION, new OrderField[] { UserSubscription.USER_SUBSCRIPTION.USER_ID }, false);
 }

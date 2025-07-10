@@ -69,6 +69,21 @@ public class AccountDao extends DAOImpl<AccountRecord, com.dink3.jooq.tables.poj
     }
 
     /**
+     * Fetch records that have <code>user_id BETWEEN lowerInclusive AND
+     * upperInclusive</code>
+     */
+    public List<com.dink3.jooq.tables.pojos.Account> fetchRangeOfUserId(String lowerInclusive, String upperInclusive) {
+        return fetchRange(Account.ACCOUNT.USER_ID, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>user_id IN (values)</code>
+     */
+    public List<com.dink3.jooq.tables.pojos.Account> fetchByUserId(String... values) {
+        return fetch(Account.ACCOUNT.USER_ID, values);
+    }
+
+    /**
      * Fetch records that have <code>plaid_item_id BETWEEN lowerInclusive AND
      * upperInclusive</code>
      */

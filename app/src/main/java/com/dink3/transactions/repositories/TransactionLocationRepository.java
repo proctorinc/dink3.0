@@ -16,4 +16,8 @@ public class TransactionLocationRepository {
     public void save(TransactionLocation location) {
         transactionLocationDao.insert(location);
     }
+
+    public void upsert(TransactionLocation location) {
+        transactionLocationDao.merge(location);
+    }
 } 

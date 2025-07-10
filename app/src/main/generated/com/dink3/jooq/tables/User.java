@@ -6,9 +6,11 @@ package com.dink3.jooq.tables;
 
 import com.dink3.jooq.DefaultSchema;
 import com.dink3.jooq.Keys;
+import com.dink3.jooq.tables.Account.AccountPath;
 import com.dink3.jooq.tables.Category.CategoryPath;
 import com.dink3.jooq.tables.PlaidItem.PlaidItemPath;
 import com.dink3.jooq.tables.RefreshToken.RefreshTokenPath;
+import com.dink3.jooq.tables.Transaction.TransactionPath;
 import com.dink3.jooq.tables.UserSubscription.UserSubscriptionPath;
 import com.dink3.jooq.tables.records.UserRecord;
 
@@ -166,6 +168,18 @@ public class User extends TableImpl<UserRecord> {
         return Arrays.asList(Keys.USER__UK_USER_29017231);
     }
 
+    private transient AccountPath _account;
+
+    /**
+     * Get the implicit to-many join path to the <code>account</code> table
+     */
+    public AccountPath account() {
+        if (_account == null)
+            _account = new AccountPath(this, null, Keys.ACCOUNT__FK_ACCOUNT_PK_USER.getInverseKey());
+
+        return _account;
+    }
+
     private transient CategoryPath _category;
 
     /**
@@ -201,6 +215,18 @@ public class User extends TableImpl<UserRecord> {
             _refreshToken = new RefreshTokenPath(this, null, Keys.REFRESH_TOKEN__FK_REFRESH_TOKEN_PK_USER.getInverseKey());
 
         return _refreshToken;
+    }
+
+    private transient TransactionPath _transaction;
+
+    /**
+     * Get the implicit to-many join path to the <code>transaction</code> table
+     */
+    public TransactionPath transaction() {
+        if (_transaction == null)
+            _transaction = new TransactionPath(this, null, Keys.TRANSACTION__FK_TRANSACTION_PK_USER.getInverseKey());
+
+        return _transaction;
     }
 
     private transient UserSubscriptionPath _userSubscription;

@@ -16,6 +16,7 @@ public class Account implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String id;
+    private String userId;
     private String plaidItemId;
     private String plaidAccountId;
     private String name;
@@ -34,6 +35,7 @@ public class Account implements Serializable {
 
     public Account(Account value) {
         this.id = value.id;
+        this.userId = value.userId;
         this.plaidItemId = value.plaidItemId;
         this.plaidAccountId = value.plaidAccountId;
         this.name = value.name;
@@ -51,6 +53,7 @@ public class Account implements Serializable {
 
     public Account(
         String id,
+        String userId,
         String plaidItemId,
         String plaidAccountId,
         String name,
@@ -66,6 +69,7 @@ public class Account implements Serializable {
         String updatedAt
     ) {
         this.id = id;
+        this.userId = userId;
         this.plaidItemId = plaidItemId;
         this.plaidAccountId = plaidAccountId;
         this.name = name;
@@ -93,6 +97,20 @@ public class Account implements Serializable {
      */
     public void setId(String id) {
         this.id = id;
+    }
+
+    /**
+     * Getter for <code>account.user_id</code>.
+     */
+    public String getUserId() {
+        return this.userId;
+    }
+
+    /**
+     * Setter for <code>account.user_id</code>.
+     */
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     /**
@@ -292,6 +310,12 @@ public class Account implements Serializable {
         }
         else if (!this.id.equals(other.id))
             return false;
+        if (this.userId == null) {
+            if (other.userId != null)
+                return false;
+        }
+        else if (!this.userId.equals(other.userId))
+            return false;
         if (this.plaidItemId == null) {
             if (other.plaidItemId != null)
                 return false;
@@ -378,6 +402,7 @@ public class Account implements Serializable {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
+        result = prime * result + ((this.userId == null) ? 0 : this.userId.hashCode());
         result = prime * result + ((this.plaidItemId == null) ? 0 : this.plaidItemId.hashCode());
         result = prime * result + ((this.plaidAccountId == null) ? 0 : this.plaidAccountId.hashCode());
         result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
@@ -399,6 +424,7 @@ public class Account implements Serializable {
         StringBuilder sb = new StringBuilder("Account (");
 
         sb.append(id);
+        sb.append(", ").append(userId);
         sb.append(", ").append(plaidItemId);
         sb.append(", ").append(plaidAccountId);
         sb.append(", ").append(name);

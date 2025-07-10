@@ -53,7 +53,7 @@ public class PlaidDataService {
      */
     public void syncUserData(User user) {
         UserSubscription subscription = getUserSubscription(user);
-        
+
         // Check if user can sync based on their tier
         if (!canUserSync(subscription)) {
             throw new SyncNotAllowedException("Sync not available. Basic users can sync once every 24 hours. Upgrade to Premium to sync anytime.");
@@ -75,70 +75,70 @@ public class PlaidDataService {
     /**
      * Get all accounts for a user
      */
-    public List<Account> getUserAccounts(User user) {
-        List<PlaidItem> items = plaidItemRepository.findByUserId(user.getId());
-        return items.stream()
-                .flatMap(item -> accountRepository.findByPlaidItemId(item.getPlaidItemId()).stream())
-                .toList();
-    }
+    // public List<Account> getUserAccounts(User user) {
+    //     List<PlaidItem> items = plaidItemRepository.findByUserId(user.getId());
+    //     return items.stream()
+    //             .flatMap(item -> accountRepository.findByPlaidItemId(item.getPlaidItemId()).stream())
+    //             .toList();
+    // }
     
     /**
      * Get a specific account by ID
      */
-    public Optional<Account> getAccountById(String accountId, User user) {
-        return accountRepository.findById(accountId)
-                .filter(account -> {
-                    // Verify the account belongs to the user
-                    List<PlaidItem> userItems = plaidItemRepository.findByUserId(user.getId());
-                    return userItems.stream()
-                            .anyMatch(item -> item.getPlaidItemId().equals(account.getPlaidItemId()));
-                });
-    }
+    // public Optional<Account> getAccountById(String accountId, User user) {
+    //     return accountRepository.findById(accountId)
+    //             .filter(account -> {
+    //                 // Verify the account belongs to the user
+    //                 List<PlaidItem> userItems = plaidItemRepository.findByUserId(user.getId());
+    //                 return userItems.stream()
+    //                         .anyMatch(item -> item.getPlaidItemId().equals(account.getPlaidItemId()));
+    //             });
+    // }
     
     /**
      * Get all transactions for a user
      */
-    public List<Transaction> getUserTransactions(User user) {
-        List<PlaidItem> items = plaidItemRepository.findByUserId(user.getId());
-        List<String> userAccountIds = items.stream()
-                .flatMap(item -> accountRepository.findByPlaidItemId(item.getPlaidItemId()).stream())
-                .map(Account::getPlaidAccountId)
-                .toList();
+    // public List<Transaction> getUserTransactions(User user) {
+    //     List<PlaidItem> items = plaidItemRepository.findByUserId(user.getId());
+    //     List<String> userAccountIds = items.stream()
+    //             .flatMap(item -> accountRepository.findByPlaidItemId(item.getPlaidItemId()).stream())
+    //             .map(Account::getPlaidAccountId)
+    //             .toList();
         
-        return transactionRepository.findAll().stream()
-                .filter(transaction -> userAccountIds.contains(transaction.getPlaidAccountId()))
-                .toList();
-    }
+    //     return transactionRepository.findAll().stream()
+    //             .filter(transaction -> userAccountIds.contains(transaction.getPlaidAccountId()))
+    //             .toList();
+    // }
     
     /**
      * Get a specific transaction by ID
      */
-    public Optional<Transaction> getTransactionById(String transactionId, User user) {
-        return transactionRepository.findById(transactionId)
-                .filter(transaction -> {
-                    // Verify the transaction belongs to the user
-                    List<PlaidItem> userItems = plaidItemRepository.findByUserId(user.getId());
-                    List<String> userAccountIds = userItems.stream()
-                            .flatMap(item -> accountRepository.findByPlaidItemId(item.getPlaidItemId()).stream())
-                            .map(Account::getPlaidAccountId)
-                            .toList();
-                    return userAccountIds.contains(transaction.getPlaidAccountId());
-                });
-    }
+    // public Optional<Transaction> getTransactionById(String transactionId, User user) {
+    //     return transactionRepository.findById(transactionId)
+    //             .filter(transaction -> {
+    //                 // Verify the transaction belongs to the user
+    //                 List<PlaidItem> userItems = plaidItemRepository.findByUserId(user.getId());
+    //                 List<String> userAccountIds = userItems.stream()
+    //                         .flatMap(item -> accountRepository.findByPlaidItemId(item.getPlaidItemId()).stream())
+    //                         .map(Account::getPlaidAccountId)
+    //                         .toList();
+    //                 return userAccountIds.contains(transaction.getPlaidAccountId());
+    //             });
+    // }
     
     /**
      * Get all institutions
      */
-    public List<Institution> getAllInstitutions() {
-        return institutionRepository.findAll();
-    }
+    // public List<Institution> getAllInstitutions() {
+    //     return institutionRepository.findAll();
+    // }
     
     /**
      * Get a specific institution by ID
      */
-    public Optional<Institution> getInstitutionById(String institutionId) {
-        return institutionRepository.findById(institutionId);
-    }
+    // public Optional<Institution> getInstitutionById(String institutionId) {
+    //     return institutionRepository.findById(institutionId);
+    // }
     
     /**
      * Get user subscription or create default basic subscription

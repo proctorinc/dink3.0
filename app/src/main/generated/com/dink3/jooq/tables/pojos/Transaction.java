@@ -16,6 +16,7 @@ public class Transaction implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String id;
+    private String userId;
     private String plaidTransactionId;
     private String plaidAccountId;
     private String categoryId;
@@ -39,6 +40,7 @@ public class Transaction implements Serializable {
 
     public Transaction(Transaction value) {
         this.id = value.id;
+        this.userId = value.userId;
         this.plaidTransactionId = value.plaidTransactionId;
         this.plaidAccountId = value.plaidAccountId;
         this.categoryId = value.categoryId;
@@ -61,6 +63,7 @@ public class Transaction implements Serializable {
 
     public Transaction(
         String id,
+        String userId,
         String plaidTransactionId,
         String plaidAccountId,
         String categoryId,
@@ -81,6 +84,7 @@ public class Transaction implements Serializable {
         String updatedAt
     ) {
         this.id = id;
+        this.userId = userId;
         this.plaidTransactionId = plaidTransactionId;
         this.plaidAccountId = plaidAccountId;
         this.categoryId = categoryId;
@@ -113,6 +117,20 @@ public class Transaction implements Serializable {
      */
     public void setId(String id) {
         this.id = id;
+    }
+
+    /**
+     * Getter for <code>transaction.user_id</code>.
+     */
+    public String getUserId() {
+        return this.userId;
+    }
+
+    /**
+     * Setter for <code>transaction.user_id</code>.
+     */
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     /**
@@ -382,6 +400,12 @@ public class Transaction implements Serializable {
         }
         else if (!this.id.equals(other.id))
             return false;
+        if (this.userId == null) {
+            if (other.userId != null)
+                return false;
+        }
+        else if (!this.userId.equals(other.userId))
+            return false;
         if (this.plaidTransactionId == null) {
             if (other.plaidTransactionId != null)
                 return false;
@@ -498,6 +522,7 @@ public class Transaction implements Serializable {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
+        result = prime * result + ((this.userId == null) ? 0 : this.userId.hashCode());
         result = prime * result + ((this.plaidTransactionId == null) ? 0 : this.plaidTransactionId.hashCode());
         result = prime * result + ((this.plaidAccountId == null) ? 0 : this.plaidAccountId.hashCode());
         result = prime * result + ((this.categoryId == null) ? 0 : this.categoryId.hashCode());
@@ -524,6 +549,7 @@ public class Transaction implements Serializable {
         StringBuilder sb = new StringBuilder("Transaction (");
 
         sb.append(id);
+        sb.append(", ").append(userId);
         sb.append(", ").append(plaidTransactionId);
         sb.append(", ").append(plaidAccountId);
         sb.append(", ").append(categoryId);

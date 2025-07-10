@@ -33,255 +33,269 @@ public class TransactionRecord extends UpdatableRecordImpl<TransactionRecord> {
     }
 
     /**
+     * Setter for <code>transaction.user_id</code>.
+     */
+    public void setUserId(String value) {
+        set(1, value);
+    }
+
+    /**
+     * Getter for <code>transaction.user_id</code>.
+     */
+    public String getUserId() {
+        return (String) get(1);
+    }
+
+    /**
      * Setter for <code>transaction.plaid_transaction_id</code>.
      */
     public void setPlaidTransactionId(String value) {
-        set(1, value);
+        set(2, value);
     }
 
     /**
      * Getter for <code>transaction.plaid_transaction_id</code>.
      */
     public String getPlaidTransactionId() {
-        return (String) get(1);
+        return (String) get(2);
     }
 
     /**
      * Setter for <code>transaction.plaid_account_id</code>.
      */
     public void setPlaidAccountId(String value) {
-        set(2, value);
+        set(3, value);
     }
 
     /**
      * Getter for <code>transaction.plaid_account_id</code>.
      */
     public String getPlaidAccountId() {
-        return (String) get(2);
+        return (String) get(3);
     }
 
     /**
      * Setter for <code>transaction.category_id</code>.
      */
     public void setCategoryId(String value) {
-        set(3, value);
+        set(4, value);
     }
 
     /**
      * Getter for <code>transaction.category_id</code>.
      */
     public String getCategoryId() {
-        return (String) get(3);
+        return (String) get(4);
     }
 
     /**
      * Setter for <code>transaction.amount</code>.
      */
     public void setAmount(Float value) {
-        set(4, value);
+        set(5, value);
     }
 
     /**
      * Getter for <code>transaction.amount</code>.
      */
     public Float getAmount() {
-        return (Float) get(4);
+        return (Float) get(5);
     }
 
     /**
      * Setter for <code>transaction.iso_currency_code</code>.
      */
     public void setIsoCurrencyCode(String value) {
-        set(5, value);
+        set(6, value);
     }
 
     /**
      * Getter for <code>transaction.iso_currency_code</code>.
      */
     public String getIsoCurrencyCode() {
-        return (String) get(5);
+        return (String) get(6);
     }
 
     /**
      * Setter for <code>transaction.unofficial_currency_code</code>.
      */
     public void setUnofficialCurrencyCode(String value) {
-        set(6, value);
+        set(7, value);
     }
 
     /**
      * Getter for <code>transaction.unofficial_currency_code</code>.
      */
     public String getUnofficialCurrencyCode() {
-        return (String) get(6);
+        return (String) get(7);
     }
 
     /**
      * Setter for <code>transaction.date</code>.
      */
     public void setDate(String value) {
-        set(7, value);
+        set(8, value);
     }
 
     /**
      * Getter for <code>transaction.date</code>.
      */
     public String getDate() {
-        return (String) get(7);
+        return (String) get(8);
     }
 
     /**
      * Setter for <code>transaction.datetime</code>.
      */
     public void setDatetime(String value) {
-        set(8, value);
+        set(9, value);
     }
 
     /**
      * Getter for <code>transaction.datetime</code>.
      */
     public String getDatetime() {
-        return (String) get(8);
+        return (String) get(9);
     }
 
     /**
      * Setter for <code>transaction.name</code>.
      */
     public void setName(String value) {
-        set(9, value);
+        set(10, value);
     }
 
     /**
      * Getter for <code>transaction.name</code>.
      */
     public String getName() {
-        return (String) get(9);
+        return (String) get(10);
     }
 
     /**
      * Setter for <code>transaction.payment_channel</code>.
      */
     public void setPaymentChannel(String value) {
-        set(10, value);
+        set(11, value);
     }
 
     /**
      * Getter for <code>transaction.payment_channel</code>.
      */
     public String getPaymentChannel() {
-        return (String) get(10);
+        return (String) get(11);
     }
 
     /**
      * Setter for <code>transaction.pending</code>.
      */
     public void setPending(Boolean value) {
-        set(11, value);
+        set(12, value);
     }
 
     /**
      * Getter for <code>transaction.pending</code>.
      */
     public Boolean getPending() {
-        return (Boolean) get(11);
+        return (Boolean) get(12);
     }
 
     /**
      * Setter for <code>transaction.pending_transaction_id</code>.
      */
     public void setPendingTransactionId(String value) {
-        set(12, value);
+        set(13, value);
     }
 
     /**
      * Getter for <code>transaction.pending_transaction_id</code>.
      */
     public String getPendingTransactionId() {
-        return (String) get(12);
+        return (String) get(13);
     }
 
     /**
      * Setter for <code>transaction.account_owner</code>.
      */
     public void setAccountOwner(String value) {
-        set(13, value);
+        set(14, value);
     }
 
     /**
      * Getter for <code>transaction.account_owner</code>.
      */
     public String getAccountOwner() {
-        return (String) get(13);
+        return (String) get(14);
     }
 
     /**
      * Setter for <code>transaction.merchant_name</code>.
      */
     public void setMerchantName(String value) {
-        set(14, value);
+        set(15, value);
     }
 
     /**
      * Getter for <code>transaction.merchant_name</code>.
      */
     public String getMerchantName() {
-        return (String) get(14);
+        return (String) get(15);
     }
 
     /**
      * Setter for <code>transaction.merchant_category_id</code>.
      */
     public void setMerchantCategoryId(String value) {
-        set(15, value);
+        set(16, value);
     }
 
     /**
      * Getter for <code>transaction.merchant_category_id</code>.
      */
     public String getMerchantCategoryId() {
-        return (String) get(15);
+        return (String) get(16);
     }
 
     /**
      * Setter for <code>transaction.merchant_category</code>.
      */
     public void setMerchantCategory(String value) {
-        set(16, value);
+        set(17, value);
     }
 
     /**
      * Getter for <code>transaction.merchant_category</code>.
      */
     public String getMerchantCategory() {
-        return (String) get(16);
+        return (String) get(17);
     }
 
     /**
      * Setter for <code>transaction.created_at</code>.
      */
     public void setCreatedAt(String value) {
-        set(17, value);
+        set(18, value);
     }
 
     /**
      * Getter for <code>transaction.created_at</code>.
      */
     public String getCreatedAt() {
-        return (String) get(17);
+        return (String) get(18);
     }
 
     /**
      * Setter for <code>transaction.updated_at</code>.
      */
     public void setUpdatedAt(String value) {
-        set(18, value);
+        set(19, value);
     }
 
     /**
      * Getter for <code>transaction.updated_at</code>.
      */
     public String getUpdatedAt() {
-        return (String) get(18);
+        return (String) get(19);
     }
 
     // -------------------------------------------------------------------------
@@ -307,10 +321,11 @@ public class TransactionRecord extends UpdatableRecordImpl<TransactionRecord> {
     /**
      * Create a detached, initialised TransactionRecord
      */
-    public TransactionRecord(String id, String plaidTransactionId, String plaidAccountId, String categoryId, Float amount, String isoCurrencyCode, String unofficialCurrencyCode, String date, String datetime, String name, String paymentChannel, Boolean pending, String pendingTransactionId, String accountOwner, String merchantName, String merchantCategoryId, String merchantCategory, String createdAt, String updatedAt) {
+    public TransactionRecord(String id, String userId, String plaidTransactionId, String plaidAccountId, String categoryId, Float amount, String isoCurrencyCode, String unofficialCurrencyCode, String date, String datetime, String name, String paymentChannel, Boolean pending, String pendingTransactionId, String accountOwner, String merchantName, String merchantCategoryId, String merchantCategory, String createdAt, String updatedAt) {
         super(Transaction.TRANSACTION);
 
         setId(id);
+        setUserId(userId);
         setPlaidTransactionId(plaidTransactionId);
         setPlaidAccountId(plaidAccountId);
         setCategoryId(categoryId);
@@ -340,6 +355,7 @@ public class TransactionRecord extends UpdatableRecordImpl<TransactionRecord> {
 
         if (value != null) {
             setId(value.getId());
+            setUserId(value.getUserId());
             setPlaidTransactionId(value.getPlaidTransactionId());
             setPlaidAccountId(value.getPlaidAccountId());
             setCategoryId(value.getCategoryId());

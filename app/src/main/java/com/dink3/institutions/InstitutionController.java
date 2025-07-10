@@ -18,10 +18,10 @@ import java.util.List;
 public class InstitutionController {
     private static final Logger log = LoggerFactory.getLogger(InstitutionController.class);
     
-    private final PlaidDataService plaidDataService;
+    private final InstitutionService institutionService;
     
-    public InstitutionController(PlaidDataService plaidDataService) {
-        this.plaidDataService = plaidDataService;
+    public InstitutionController(InstitutionService institutionService) {
+        this.institutionService = institutionService;
     }
     
     /**
@@ -30,7 +30,7 @@ public class InstitutionController {
     @GetMapping
     public ResponseEntity<List<Institution>> getInstitutions() {
         log.info("Getting all institutions");
-        List<Institution> institutions = plaidDataService.getAllInstitutions();
+        List<Institution> institutions = institutionService.getAllInstitutions();
         return ResponseEntity.ok(institutions);
     }
     
@@ -41,7 +41,7 @@ public class InstitutionController {
     public ResponseEntity<Institution> getInstitution(@PathVariable String institutionId) {
         log.info("Getting institution: {}", institutionId);
         
-        return plaidDataService.getInstitutionById(institutionId)
+        return institutionService.getInstitutionById(institutionId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }

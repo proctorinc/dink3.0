@@ -24,6 +24,10 @@ public class TransactionRepository {
         transactionsDao.update(transaction);
     }
 
+    public void upsert(Transaction transaction) {
+        transactionsDao.merge(transaction);
+    }
+
     public Optional<Transaction> findByPlaidTransactionId(String plaidTransactionId) {
         return transactionsDao.findAll().stream()
                 .filter(transaction -> transaction.getPlaidTransactionId().equals(plaidTransactionId))
@@ -37,9 +41,7 @@ public class TransactionRepository {
     }
 
     public List<Transaction> findByUserId(String userId) {
-        // This would require a join with accounts and plaid_items tables
-        // For now, we'll return all transactions and filter in the service layer
-        return transactionsDao.findAll();
+        return transactionsDao.fetchByUserId(userId);
     }
 
     public Optional<Transaction> findById(String id) {
