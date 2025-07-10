@@ -1,6 +1,6 @@
 package com.dink3.user.dto;
 
-import com.dink3.jooq.tables.pojos.UserSubscriptions;
+import com.dink3.jooq.tables.pojos.UserSubscription;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,5 +20,5 @@ public class UserProfileDto {
     private String email;
     private String role;
     private String createdAt;
-    private UserSubscriptions subscription;
+    private UserSubscription subscription;
 } 

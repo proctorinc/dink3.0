@@ -1,6 +1,6 @@
 package com.dink3.institutions;
 
-import com.dink3.jooq.tables.pojos.Institutions;
+import com.dink3.jooq.tables.pojos.Institution;
 import com.dink3.plaid.service.PlaidDataService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,9 +28,9 @@ public class InstitutionController {
      * Get all institutions
      */
     @GetMapping
-    public ResponseEntity<List<Institutions>> getInstitutions() {
+    public ResponseEntity<List<Institution>> getInstitutions() {
         log.info("Getting all institutions");
-        List<Institutions> institutions = plaidDataService.getAllInstitutions();
+        List<Institution> institutions = plaidDataService.getAllInstitutions();
         return ResponseEntity.ok(institutions);
     }
     
@@ -38,7 +38,7 @@ public class InstitutionController {
      * Get a specific institution by ID
      */
     @GetMapping("/{institutionId}")
-    public ResponseEntity<Institutions> getInstitution(@PathVariable String institutionId) {
+    public ResponseEntity<Institution> getInstitution(@PathVariable String institutionId) {
         log.info("Getting institution: {}", institutionId);
         
         return plaidDataService.getInstitutionById(institutionId)

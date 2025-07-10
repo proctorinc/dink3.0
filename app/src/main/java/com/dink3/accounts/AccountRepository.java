@@ -1,7 +1,7 @@
 package com.dink3.accounts;
 
-import com.dink3.jooq.tables.daos.AccountsDao;
-import com.dink3.jooq.tables.pojos.Accounts;
+import com.dink3.jooq.tables.daos.AccountDao;
+import com.dink3.jooq.tables.pojos.Account;
 import org.jooq.Configuration;
 import org.springframework.stereotype.Repository;
 
@@ -10,22 +10,22 @@ import java.util.Optional;
 
 @Repository
 public class AccountRepository {
-    private final AccountsDao accountsDao;
+    private final AccountDao accountDao;
 
     public AccountRepository(Configuration configuration) {
-        this.accountsDao = new AccountsDao(configuration);
+        this.accountDao = new AccountDao(configuration);
     }
 
-    public void save(Accounts account) {
-        accountsDao.insert(account);
+    public void save(Account account) {
+        accountDao.insert(account);
     }
 
-    public void saveOrUpdate(Accounts account) {
+    public void saveOrUpdate(Account account) {
         // Check if account exists
-        Optional<Accounts> existing = findByPlaidAccountId(account.getPlaidAccountId());
+        Optional<Account> existing = findByPlaidAccountId(account.getPlaidAccountId());
         if (existing.isPresent()) {
             // Update existing account
-            Accounts existingAccount = existing.get();
+            Account existingAccount = existing.get();
             existingAccount.setName(account.getName());
             existingAccount.setMask(account.getMask());
             existingAccount.setOfficialName(account.getOfficialName());
@@ -36,40 +36,40 @@ public class AccountRepository {
             existingAccount.setIsoCurrencyCode(account.getIsoCurrencyCode());
             existingAccount.setUnofficialCurrencyCode(account.getUnofficialCurrencyCode());
             existingAccount.setUpdatedAt(account.getUpdatedAt());
-            accountsDao.update(existingAccount);
+            accountDao.update(existingAccount);
         } else {
             // Insert new account
-            accountsDao.insert(account);
+            accountDao.insert(account);
         }
     }
 
-    public void update(Accounts account) {
-        accountsDao.update(account);
+    public void update(Account account) {
+        accountDao.update(account);
     }
 
-    public Optional<Accounts> findByPlaidAccountId(String plaidAccountId) {
-        return accountsDao.findAll().stream()
+    public Optional<Account> findByPlaidAccountId(String plaidAccountId) {
+        return accountDao.findAll().stream()
                 .filter(account -> account.getPlaidAccountId().equals(plaidAccountId))
                 .findFirst();
     }
 
-    public List<Accounts> findByPlaidItemId(String plaidItemId) {
-        return accountsDao.findAll().stream()
+    public List<Account> findByPlaidItemId(String plaidItemId) {
+        return accountDao.findAll().stream()
                 .filter(account -> account.getPlaidItemId().equals(plaidItemId))
                 .toList();
     }
 
-    public List<Accounts> findByUserId(String userId) {
+    public List<Account> findByUserId(String userId) {
         // This would require a join with plaid_items table
         // For now, we'll return all accounts and filter in the service layer
-        return accountsDao.findAll();
+        return accountDao.findAll();
     }
 
-    public Optional<Accounts> findById(String id) {
-        return Optional.ofNullable(accountsDao.findById(id));
+    public Optional<Account> findById(String id) {
+        return Optional.ofNullable(accountDao.findById(id));
     }
 
-    public List<Accounts> findAll() {
-        return accountsDao.findAll();
+    public List<Account> findAll() {
+        return accountDao.findAll();
     }
 } 

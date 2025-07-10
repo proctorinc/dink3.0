@@ -1,9 +1,10 @@
 package com.dink3.auth;
 
-import com.dink3.jooq.tables.pojos.Users;
+import com.dink3.jooq.tables.pojos.User;
 import com.dink3.user.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,7 +17,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
+import javax.crypto.SecretKey;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -35,15 +38,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring(7);
             try {
+                SecretKey key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
                 Claims claims = Jwts.parser()
-                    .setSigningKey(jwtSecret.getBytes())
+                    .verifyWith(key)
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();
                 String userId = claims.getSubject();
-                Optional<Users> userOpt = userService.getUserById(userId);
+                Optional<User> userOpt = userService.getUserById(userId);
                 if (userOpt.isPresent()) {
-                    Users user = userOpt.get();
+                    User user = userOpt.get();
                     UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
                             user, null, null);
                     auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

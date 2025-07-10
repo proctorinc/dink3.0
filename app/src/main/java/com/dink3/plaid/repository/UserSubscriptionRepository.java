@@ -1,7 +1,7 @@
 package com.dink3.plaid.repository;
 
-import com.dink3.jooq.tables.daos.UserSubscriptionsDao;
-import com.dink3.jooq.tables.pojos.UserSubscriptions;
+import com.dink3.jooq.tables.daos.UserSubscriptionDao;
+import com.dink3.jooq.tables.pojos.UserSubscription;
 import org.jooq.Configuration;
 import org.springframework.stereotype.Repository;
 
@@ -9,27 +9,27 @@ import java.util.Optional;
 
 @Repository
 public class UserSubscriptionRepository {
-    private final UserSubscriptionsDao userSubscriptionsDao;
+    private final UserSubscriptionDao userSubscriptionsDao;
 
     public UserSubscriptionRepository(Configuration configuration) {
-        this.userSubscriptionsDao = new UserSubscriptionsDao(configuration);
+        this.userSubscriptionsDao = new UserSubscriptionDao(configuration);
     }
 
-    public void save(UserSubscriptions subscription) {
+    public void save(UserSubscription subscription) {
         userSubscriptionsDao.insert(subscription);
     }
 
-    public void update(UserSubscriptions subscription) {
+    public void update(UserSubscription subscription) {
         userSubscriptionsDao.update(subscription);
     }
 
-    public Optional<UserSubscriptions> findByUserId(String userId) {
+    public Optional<UserSubscription> findByUserId(String userId) {
         return userSubscriptionsDao.findAll().stream()
                 .filter(subscription -> subscription.getUserId().equals(userId))
                 .findFirst();
     }
 
-    public Optional<UserSubscriptions> findById(String id) {
+    public Optional<UserSubscription> findById(String id) {
         return Optional.ofNullable(userSubscriptionsDao.findById(id));
     }
 } 

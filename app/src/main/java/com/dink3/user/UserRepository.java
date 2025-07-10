@@ -1,7 +1,7 @@
 package com.dink3.user;
 
-import com.dink3.jooq.tables.daos.UsersDao;
-import com.dink3.jooq.tables.pojos.Users;
+import com.dink3.jooq.tables.daos.UserDao;
+import com.dink3.jooq.tables.pojos.User;
 import org.jooq.Configuration;
 import org.springframework.stereotype.Repository;
 
@@ -9,23 +9,23 @@ import java.util.Optional;
 
 @Repository
 public class UserRepository {
-    private final UsersDao usersDao;
+    private final UserDao usersDao;
 
     public UserRepository(Configuration configuration) {
-        this.usersDao = new UsersDao(configuration);
+        this.usersDao = new UserDao(configuration);
     }
 
-    public Optional<Users> findById(String id) {
+    public Optional<User> findById(String id) {
         return Optional.ofNullable(usersDao.findById(id));
     }
 
-    public Optional<Users> findByEmail(String email) {
+    public Optional<User> findByEmail(String email) {
         return usersDao.findAll().stream()
                 .filter(u -> u.getEmail().equalsIgnoreCase(email))
                 .findFirst();
     }
 
-    public void save(Users user) {
+    public void save(User user) {
         usersDao.insert(user);
     }
 } 

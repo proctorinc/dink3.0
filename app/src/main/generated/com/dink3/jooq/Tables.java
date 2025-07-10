@@ -4,13 +4,16 @@
 package com.dink3.jooq;
 
 
-import com.dink3.jooq.tables.Accounts;
-import com.dink3.jooq.tables.Institutions;
-import com.dink3.jooq.tables.PlaidItems;
-import com.dink3.jooq.tables.RefreshTokens;
-import com.dink3.jooq.tables.Transactions;
-import com.dink3.jooq.tables.UserSubscriptions;
-import com.dink3.jooq.tables.Users;
+import com.dink3.jooq.tables.Account;
+import com.dink3.jooq.tables.Category;
+import com.dink3.jooq.tables.Institution;
+import com.dink3.jooq.tables.PlaidItem;
+import com.dink3.jooq.tables.RefreshToken;
+import com.dink3.jooq.tables.Transaction;
+import com.dink3.jooq.tables.TransactionLocation;
+import com.dink3.jooq.tables.TransactionPaymentMeta;
+import com.dink3.jooq.tables.User;
+import com.dink3.jooq.tables.UserSubscription;
 
 
 /**
@@ -20,37 +23,52 @@ import com.dink3.jooq.tables.Users;
 public class Tables {
 
     /**
-     * The table <code>accounts</code>.
+     * The table <code>account</code>.
      */
-    public static final Accounts ACCOUNTS = Accounts.ACCOUNTS;
+    public static final Account ACCOUNT = Account.ACCOUNT;
 
     /**
-     * The table <code>institutions</code>.
+     * The table <code>category</code>.
      */
-    public static final Institutions INSTITUTIONS = Institutions.INSTITUTIONS;
+    public static final Category CATEGORY = Category.CATEGORY;
 
     /**
-     * The table <code>plaid_items</code>.
+     * The table <code>institution</code>.
      */
-    public static final PlaidItems PLAID_ITEMS = PlaidItems.PLAID_ITEMS;
+    public static final Institution INSTITUTION = Institution.INSTITUTION;
 
     /**
-     * The table <code>refresh_tokens</code>.
+     * The table <code>plaid_item</code>.
      */
-    public static final RefreshTokens REFRESH_TOKENS = RefreshTokens.REFRESH_TOKENS;
+    public static final PlaidItem PLAID_ITEM = PlaidItem.PLAID_ITEM;
 
     /**
-     * The table <code>transactions</code>.
+     * The table <code>refresh_token</code>.
      */
-    public static final Transactions TRANSACTIONS = Transactions.TRANSACTIONS;
+    public static final RefreshToken REFRESH_TOKEN = RefreshToken.REFRESH_TOKEN;
 
     /**
-     * The table <code>user_subscriptions</code>.
+     * The table <code>transaction</code>.
      */
-    public static final UserSubscriptions USER_SUBSCRIPTIONS = UserSubscriptions.USER_SUBSCRIPTIONS;
+    public static final Transaction TRANSACTION = Transaction.TRANSACTION;
 
     /**
-     * The table <code>users</code>.
+     * The table <code>transaction_location</code>.
      */
-    public static final Users USERS = Users.USERS;
+    public static final TransactionLocation TRANSACTION_LOCATION = TransactionLocation.TRANSACTION_LOCATION;
+
+    /**
+     * The table <code>transaction_payment_meta</code>.
+     */
+    public static final TransactionPaymentMeta TRANSACTION_PAYMENT_META = TransactionPaymentMeta.TRANSACTION_PAYMENT_META;
+
+    /**
+     * The table <code>user</code>.
+     */
+    public static final User USER = User.USER;
+
+    /**
+     * The table <code>user_subscription</code>.
+     */
+    public static final UserSubscription USER_SUBSCRIPTION = UserSubscription.USER_SUBSCRIPTION;
 }

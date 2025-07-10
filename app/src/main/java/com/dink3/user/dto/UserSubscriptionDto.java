@@ -1,6 +1,6 @@
 package com.dink3.user.dto;
 
-import com.dink3.jooq.tables.pojos.UserSubscriptions;
+import com.dink3.jooq.tables.pojos.UserSubscription;
 import lombok.Builder;
 import lombok.Data;
 
@@ -20,10 +20,10 @@ public class UserSubscriptionDto {
     private String updatedAt;
 
     /**
-     * Convert this DTO to a jOOQ UserSubscriptions POJO.
+     * Convert this DTO to a jOOQ UserSubscription POJO.
      */
-    public UserSubscriptions toUserSubscriptions() {
-        UserSubscriptions subscription = new UserSubscriptions();
+    public UserSubscription toUserSubscription() {
+        UserSubscription subscription = new UserSubscription();
         subscription.setId(id);
         subscription.setUserId(userId);
         subscription.setTier(tier);
@@ -36,7 +36,7 @@ public class UserSubscriptionDto {
     /**
      * Create a UserSubscriptionDto from a jOOQ UserSubscriptions POJO.
      */
-    public static UserSubscriptionDto fromUserSubscriptions(UserSubscriptions subscription) {
+    public static UserSubscriptionDto fromUserSubscriptions(UserSubscription subscription) {
         return UserSubscriptionDto.builder()
                 .id(subscription.getId())
                 .userId(subscription.getUserId())

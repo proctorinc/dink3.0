@@ -1,7 +1,7 @@
 package com.dink3.user;
 
-import com.dink3.jooq.tables.pojos.Users;
-import com.dink3.jooq.tables.pojos.UserSubscriptions;
+import com.dink3.jooq.tables.pojos.User;
+import com.dink3.jooq.tables.pojos.UserSubscription;
 import com.dink3.plaid.repository.UserSubscriptionRepository;
 import com.dink3.user.dto.UserProfileDto;
 
@@ -19,21 +19,21 @@ public class UserService {
         this.userSubscriptionRepository = userSubscriptionRepository;
     }
 
-    public Optional<Users> getUserById(String id) {
+    public Optional<User> getUserById(String id) {
         return userRepository.findById(id);
     }
 
-    public Optional<Users> getUserByEmail(String email) {
+    public Optional<User> getUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
     public Optional<UserProfileDto> getUserProfile(String userId) {
-        Optional<Users> userOpt = userRepository.findById(userId);
+        Optional<User> userOpt = userRepository.findById(userId);
         if (userOpt.isEmpty()) {
             return Optional.empty();
         }
-        Users user = userOpt.get();
-        Optional<UserSubscriptions> subscriptionOpt = userSubscriptionRepository.findByUserId(userId);
+        User user = userOpt.get();
+        Optional<UserSubscription> subscriptionOpt = userSubscriptionRepository.findByUserId(userId);
         UserProfileDto profile = new UserProfileDto(
             user.getId(),
             user.getUsername(),

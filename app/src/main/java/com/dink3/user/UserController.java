@@ -1,6 +1,6 @@
 package com.dink3.user;
 
-import com.dink3.jooq.tables.pojos.Users;
+import com.dink3.jooq.tables.pojos.User;
 import com.dink3.user.dto.UserProfileDto;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -28,11 +28,7 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<?> getMe(@AuthenticationPrincipal Users user) {
-        if (user == null) {
-            log.warn("Unauthorized access attempt to /me endpoint");
-            return ResponseEntity.status(401).body("Unauthorized");
-        }
+    public ResponseEntity<?> getMe(@AuthenticationPrincipal User user) {
         log.info("User info accessed for userId: {}", user.getId());
         Optional<UserProfileDto> profileOpt = userService.getUserProfile(user.getId());
         if (profileOpt.isEmpty()) {

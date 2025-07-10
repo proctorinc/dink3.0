@@ -1,7 +1,7 @@
 package com.dink3.accounts;
 
-import com.dink3.jooq.tables.pojos.Users;
-import com.dink3.jooq.tables.pojos.Accounts;
+import com.dink3.jooq.tables.pojos.User;
+import com.dink3.jooq.tables.pojos.Account;
 import com.dink3.plaid.service.PlaidDataService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "Accounts", description = "Account operations")
+@Tag(name = "Accounts", description = "Financial account operations")
 @RestController
 @RequestMapping("/api/v1/accounts")
 @SecurityRequirement(name = "bearerAuth")
@@ -30,14 +30,9 @@ public class AccountController {
      * Get all accounts for the authenticated user
      */
     @GetMapping
-    public ResponseEntity<List<Accounts>> getAccounts(@AuthenticationPrincipal Users user) {
-        if (user == null) {
-            log.warn("Unauthorized access attempt to get accounts");
-            return ResponseEntity.status(401).build();
-        }
-        
+    public ResponseEntity<List<Account>> getAccounts(@AuthenticationPrincipal User user) {
         log.info("Getting accounts for user: {}", user.getId());
-        List<Accounts> accounts = plaidDataService.getUserAccounts(user);
+        List<Account> accounts = plaidDataService.getUserAccounts(user);
         return ResponseEntity.ok(accounts);
     }
     
@@ -45,13 +40,8 @@ public class AccountController {
      * Get a specific account by ID
      */
     @GetMapping("/{accountId}")
-    public ResponseEntity<Accounts> getAccount(@PathVariable String accountId, 
-                                              @AuthenticationPrincipal Users user) {
-        if (user == null) {
-            log.warn("Unauthorized access attempt to get account");
-            return ResponseEntity.status(401).build();
-        }
-        
+    public ResponseEntity<Account> getAccount(@PathVariable String accountId, 
+                                              @AuthenticationPrincipal User user) {
         log.info("Getting account {} for user: {}", accountId, user.getId());
         
         return plaidDataService.getAccountById(accountId, user)

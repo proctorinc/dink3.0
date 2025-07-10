@@ -1,7 +1,7 @@
 package com.dink3.institutions;
 
-import com.dink3.jooq.tables.daos.InstitutionsDao;
-import com.dink3.jooq.tables.pojos.Institutions;
+import com.dink3.jooq.tables.daos.InstitutionDao;
+import com.dink3.jooq.tables.pojos.Institution;
 import org.jooq.Configuration;
 import org.springframework.stereotype.Repository;
 
@@ -10,31 +10,31 @@ import java.util.Optional;
 
 @Repository
 public class InstitutionRepository {
-    private final InstitutionsDao institutionsDao;
+    private final InstitutionDao institutionsDao;
 
     public InstitutionRepository(Configuration configuration) {
-        this.institutionsDao = new InstitutionsDao(configuration);
+        this.institutionsDao = new InstitutionDao(configuration);
     }
 
-    public void save(Institutions institution) {
+    public void save(Institution institution) {
         institutionsDao.insert(institution);
     }
 
-    public void update(Institutions institution) {
+    public void update(Institution institution) {
         institutionsDao.update(institution);
     }
 
-    public Optional<Institutions> findByPlaidInstitutionId(String plaidInstitutionId) {
+    public Optional<Institution> findByPlaidInstitutionId(String plaidInstitutionId) {
         return institutionsDao.findAll().stream()
                 .filter(institution -> institution.getPlaidInstitutionId().equals(plaidInstitutionId))
                 .findFirst();
     }
 
-    public List<Institutions> findAll() {
+    public List<Institution> findAll() {
         return institutionsDao.findAll();
     }
 
-    public Optional<Institutions> findById(String id) {
+    public Optional<Institution> findById(String id) {
         return Optional.ofNullable(institutionsDao.findById(id));
     }
 } 

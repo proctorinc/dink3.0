@@ -1,26 +1,33 @@
 package com.dink3.plaid;
 
-import com.plaid.client.ApiClient;
-import com.plaid.client.request.PlaidApi;
-import com.plaid.client.model.*;
-import com.dink3.jooq.tables.pojos.Users;
-import com.dink3.jooq.tables.pojos.PlaidItems;
-import com.dink3.jooq.tables.pojos.Institutions;
-import com.dink3.jooq.tables.pojos.Accounts;
-import com.dink3.jooq.tables.pojos.Transactions;
-import com.dink3.plaid.repository.PlaidItemRepository;
+import com.dink3.jooq.tables.pojos.Account;
+import com.dink3.jooq.tables.pojos.Institution;
+import com.dink3.jooq.tables.pojos.PlaidItem;
+import com.dink3.jooq.tables.pojos.Transaction;
+import com.dink3.jooq.tables.pojos.TransactionLocation;
+import com.dink3.jooq.tables.pojos.TransactionPaymentMeta;
+import com.dink3.transactions.dto.TransactionDto;
+import com.dink3.transactions.repositories.TransactionLocationRepository;
+import com.dink3.transactions.repositories.TransactionPaymentMetaRepository;
+import com.dink3.transactions.repositories.TransactionRepository;
+import com.dink3.transactions.dto.*;
+import com.dink3.jooq.tables.pojos.User;
 import com.dink3.institutions.InstitutionRepository;
 import com.dink3.accounts.AccountRepository;
-import com.dink3.transactions.TransactionRepository;
+import com.dink3.util.UuidGenerator;
+import com.plaid.client.ApiClient;
+import com.plaid.client.model.*;
+import com.plaid.client.request.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import com.dink3.plaid.mapper.PlaidTransactionMapper;
+import com.dink3.plaid.repository.PlaidItemRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import com.dink3.util.UuidGenerator;
 
 @Service
 public class PlaidService {
@@ -31,6 +38,8 @@ public class PlaidService {
     private final InstitutionRepository institutionRepository;
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
+    private final TransactionLocationRepository transactionLocationRepository;
+    private final TransactionPaymentMetaRepository transactionPaymentMetaRepository;
     
     @Value("${plaid.webhook-url}")
     private String webhookUrl;
@@ -41,19 +50,23 @@ public class PlaidService {
                        PlaidItemRepository plaidItemRepository,
                        InstitutionRepository institutionRepository,
                        AccountRepository accountRepository,
-                       TransactionRepository transactionRepository) {
+                       TransactionRepository transactionRepository,
+                       TransactionLocationRepository transactionLocationRepository,
+                       TransactionPaymentMetaRepository transactionPaymentMetaRepository) {
         // Use the properly configured ApiClient to create PlaidApi
         this.plaidApi = plaidClient.createService(PlaidApi.class);
         this.plaidItemRepository = plaidItemRepository;
         this.institutionRepository = institutionRepository;
         this.accountRepository = accountRepository;
         this.transactionRepository = transactionRepository;
+        this.transactionLocationRepository = transactionLocationRepository;
+        this.transactionPaymentMetaRepository = transactionPaymentMetaRepository;
     }
     
     /**
      * Create a Link token for the user to connect their bank account
      */
-    public String createLinkToken(Users user) {
+    public String createLinkToken(User user) {
         try {
             LinkTokenCreateRequest request = new LinkTokenCreateRequest()
                 .user(new LinkTokenCreateRequestUser()
@@ -63,8 +76,10 @@ public class PlaidService {
                 .countryCodes(List.of(CountryCode.US))
                 .language("en")
                 .webhook(webhookUrl);
-            
-            LinkTokenCreateResponse response = plaidApi.linkTokenCreate(request).execute().body();
+            log.info("Calling Plaid: linkTokenCreate request={}", request);
+            var responseRaw = plaidApi.linkTokenCreate(request).execute();
+            log.info("Plaid linkTokenCreate response: {}", responseRaw);
+            LinkTokenCreateResponse response = responseRaw.body();
             if (response != null && response.getLinkToken() != null) {
                 log.info("Created link token for user: {}", user.getId());
                 return response.getLinkToken();
@@ -78,15 +93,17 @@ public class PlaidService {
     /**
      * Exchange public token for access token and store the item
      */
-    public boolean exchangePublicToken(String publicToken, Users user) {
+    public boolean exchangePublicToken(String publicToken, User user) {
         try {
             ItemPublicTokenExchangeRequest request = new ItemPublicTokenExchangeRequest()
                 .publicToken(publicToken);
-            
-            ItemPublicTokenExchangeResponse response = plaidApi.itemPublicTokenExchange(request).execute().body();
+            log.info("Calling Plaid: itemPublicTokenExchange request={}", request);
+            var responseRaw = plaidApi.itemPublicTokenExchange(request).execute();
+            log.info("Plaid itemPublicTokenExchange response: status={} body={}", responseRaw.code(), responseRaw.body());
+            ItemPublicTokenExchangeResponse response = responseRaw.body();
             if (response != null && response.getAccessToken() != null) {
                 // Store the item
-                PlaidItems item = new PlaidItems();
+                PlaidItem item = new PlaidItem();
                 item.setId(UuidGenerator.generateUuid());
                 item.setUserId(user.getId());
                 item.setPlaidItemId(response.getItemId());
@@ -113,28 +130,30 @@ public class PlaidService {
     /**
      * Sync all data for a specific item (accounts, transactions, institution)
      */
-    public void syncItemData(PlaidItems item) {
+    public void syncItemData(PlaidItem item) {
         try {
             // Get accounts
             AccountsGetRequest accountsRequest = new AccountsGetRequest()
                 .accessToken(item.getPlaidAccessToken());
-            
-            AccountsGetResponse accountsResponse = plaidApi.accountsGet(accountsRequest).execute().body();
+            log.info("Calling Plaid: accountsGet request={}", accountsRequest);
+            var responseRaw = plaidApi.accountsGet(accountsRequest).execute();
+            log.info("Plaid accountsGet response: status={} body={}", responseRaw.code(), responseRaw.body());
+            AccountsGetResponse accountsResponse = responseRaw.body();
             if (accountsResponse != null && accountsResponse.getAccounts() != null) {
-                // Update institution ID from the item (PlaidItems) if available
+                // Update institution ID from the item (PlaidItem) if available
                 String institutionId = item.getPlaidInstitutionId();
                 if (institutionId != null && !institutionId.isEmpty()) {
                     syncInstitution(institutionId);
                 }
                 
                 // Store accounts
-                for (AccountBase account : accountsResponse.getAccounts()) {
-                    storeAccount(account, item.getPlaidItemId());
+                for (com.plaid.client.model.AccountBase plaidAccount : accountsResponse.getAccounts()) {
+                    storeAccount(plaidAccount, item.getPlaidItemId());
                 }
                 
                 // Fetch transactions for each account
-                for (AccountBase account : accountsResponse.getAccounts()) {
-                    syncTransactions(account.getAccountId(), item.getPlaidAccessToken());
+                for (com.plaid.client.model.AccountBase plaidAccount : accountsResponse.getAccounts()) {
+                    syncTransactions(plaidAccount.getAccountId(), item.getPlaidAccessToken());
                 }
             }
         } catch (Exception e) {
@@ -156,13 +175,15 @@ public class PlaidService {
                 .startDate(startDate.toLocalDate())
                 .endDate(endDate.toLocalDate())
                 .options(new TransactionsGetRequestOptions()
-                    .accountIds(List.of(accountId)));
-            
-            TransactionsGetResponse response = plaidApi.transactionsGet(request).execute().body();
+                .accountIds(List.of(accountId)));
+            log.info("Calling Plaid: transactionsGet request={}", request);
+            var responseRaw = plaidApi.transactionsGet(request).execute();
+            log.info("Plaid transactionsGet response: status={} body={}", responseRaw.code(), responseRaw.body());
+            TransactionsGetResponse response = responseRaw.body();
             if (response != null && response.getTransactions() != null) {
-                for (Transaction transaction : response.getTransactions()) {
-                    if (transaction.getAccountId().equals(accountId)) {
-                        storeTransaction(transaction);
+                for (com.plaid.client.model.Transaction plaidTransaction : response.getTransactions()) {
+                    if (plaidTransaction.getAccountId().equals(accountId)) {
+                        storeTransaction(plaidTransaction);
                     }
                 }
             }
@@ -176,30 +197,23 @@ public class PlaidService {
      */
     private void storeAccount(AccountBase plaidAccount, String plaidItemId) {
         try {
-            Accounts account = new Accounts();
+            Account account = new Account();
             account.setId(UuidGenerator.generateUuid());
-            account.setPlaidItemId(plaidItemId);
             account.setPlaidAccountId(plaidAccount.getAccountId());
+            account.setPlaidItemId(plaidItemId);
             account.setName(plaidAccount.getName());
             account.setMask(plaidAccount.getMask());
             account.setOfficialName(plaidAccount.getOfficialName());
-            account.setType(plaidAccount.getType().getValue());
+            account.setType(plaidAccount.getType() != null ? plaidAccount.getType().getValue() : null);
             account.setSubtype(plaidAccount.getSubtype() != null ? plaidAccount.getSubtype().getValue() : null);
-            
-            // Handle balance conversion from Double to Float
-            if (plaidAccount.getBalances().getCurrent() != null) {
-                account.setCurrentBalance(plaidAccount.getBalances().getCurrent().floatValue());
-            }
-            if (plaidAccount.getBalances().getAvailable() != null) {
-                account.setAvailableBalance(plaidAccount.getBalances().getAvailable().floatValue());
-            }
-            
             account.setIsoCurrencyCode(plaidAccount.getBalances().getIsoCurrencyCode());
             account.setUnofficialCurrencyCode(plaidAccount.getBalances().getUnofficialCurrencyCode());
-            account.setCreatedAt(LocalDateTime.now().toString());
-            account.setUpdatedAt(LocalDateTime.now().toString());
+            account.setAvailableBalance(plaidAccount.getBalances().getAvailable() != null ? plaidAccount.getBalances().getAvailable().floatValue() : null);
+            account.setCurrentBalance(plaidAccount.getBalances().getCurrent() != null ? plaidAccount.getBalances().getCurrent().floatValue() : null);
+            // account.setBalanceLimit(plaidAccount.getBalances().getLimit());
             
-            accountRepository.saveOrUpdate(account);
+            accountRepository.save(account);
+            
         } catch (Exception e) {
             log.error("Error storing account: {}", plaidAccount.getAccountId(), e);
         }
@@ -208,79 +222,91 @@ public class PlaidService {
     /**
      * Store a transaction in the database
      */
-    private void storeTransaction(Transaction plaidTransaction) {
+    private TransactionDto storeTransaction(com.plaid.client.model.Transaction plaidTransaction) {
         try {
             // Check if transaction already exists
-            Optional<Transactions> existing = transactionRepository.findByPlaidTransactionId(plaidTransaction.getTransactionId());
+            Optional<Transaction> existing = transactionRepository.findByPlaidTransactionId(plaidTransaction.getTransactionId());
+            Transaction transaction;
             if (existing.isPresent()) {
-                // Update existing transaction
-                Transactions transaction = existing.get();
-                updateTransactionFromPlaid(transaction, plaidTransaction);
-                transactionRepository.update(transaction);
+                transaction = PlaidTransactionMapper.toTransaction(plaidTransaction, existing.get().getId());
             } else {
-                // Create new transaction
-                Transactions transaction = new Transactions();
-                transaction.setId(UuidGenerator.generateUuid());
-                transaction.setPlaidTransactionId(plaidTransaction.getTransactionId());
-                transaction.setPlaidAccountId(plaidTransaction.getAccountId());
-                transaction.setAmount(plaidTransaction.getAmount().floatValue());
-                transaction.setIsoCurrencyCode(plaidTransaction.getIsoCurrencyCode());
-                transaction.setUnofficialCurrencyCode(plaidTransaction.getUnofficialCurrencyCode());
-                transaction.setDate(plaidTransaction.getDate().toString());
-                transaction.setDatetime(plaidTransaction.getDatetime() != null ? plaidTransaction.getDatetime().toString() : null);
-                transaction.setName(plaidTransaction.getName());
-                transaction.setMerchantName(plaidTransaction.getMerchantName());
-                transaction.setPaymentChannel(plaidTransaction.getPaymentChannel() != null ? plaidTransaction.getPaymentChannel().getValue() : null);
-                transaction.setPending(plaidTransaction.getPending());
-                transaction.setPendingTransactionId(plaidTransaction.getPendingTransactionId());
-                transaction.setAccountOwner(plaidTransaction.getAccountOwner());
-                transaction.setCategoryId(plaidTransaction.getCategoryId());
-                transaction.setCategory(plaidTransaction.getCategory() != null ? String.join(", ", plaidTransaction.getCategory()) : null);
-                
-                // Location data
-                if (plaidTransaction.getLocation() != null) {
-                    transaction.setLocationAddress(plaidTransaction.getLocation().getAddress());
-                    transaction.setLocationCity(plaidTransaction.getLocation().getCity());
-                    transaction.setLocationRegion(plaidTransaction.getLocation().getRegion());
-                    transaction.setLocationPostalCode(plaidTransaction.getLocation().getPostalCode());
-                    transaction.setLocationCountry(plaidTransaction.getLocation().getCountry());
-                    if (plaidTransaction.getLocation().getLat() != null) {
-                        transaction.setLocationLat(plaidTransaction.getLocation().getLat().floatValue());
-                    }
-                    if (plaidTransaction.getLocation().getLon() != null) {
-                        transaction.setLocationLon(plaidTransaction.getLocation().getLon().floatValue());
-                    }
-                }
-                
-                // Payment metadata
-                if (plaidTransaction.getPaymentMeta() != null) {
-                    transaction.setPaymentMetaReferenceNumber(plaidTransaction.getPaymentMeta().getReferenceNumber());
-                    transaction.setPaymentMetaPayer(plaidTransaction.getPaymentMeta().getPayer());
-                    transaction.setPaymentMetaPaymentMethod(plaidTransaction.getPaymentMeta().getPaymentMethod());
-                    transaction.setPaymentMetaPaymentProcessor(plaidTransaction.getPaymentMeta().getPaymentProcessor());
-                    transaction.setPaymentMetaPpdId(plaidTransaction.getPaymentMeta().getPpdId());
-                    transaction.setPaymentMetaReason(plaidTransaction.getPaymentMeta().getReason());
-                    transaction.setPaymentMetaByOrderOf(plaidTransaction.getPaymentMeta().getByOrderOf());
-                    transaction.setPaymentMetaPayee(plaidTransaction.getPaymentMeta().getPayee());
-                }
-                
-                transaction.setCreatedAt(LocalDateTime.now().toString());
-                transaction.setUpdatedAt(LocalDateTime.now().toString());
-                
-                transactionRepository.save(transaction);
+                transaction = PlaidTransactionMapper.toTransaction(plaidTransaction, null);
             }
+            transactionRepository.save(transaction);
+
+            // Store TransactionLocation if Plaid location exists
+            TransactionLocation location = PlaidTransactionMapper.toTransactionLocation(plaidTransaction, transaction.getId());
+            if (location != null) {
+                transactionLocationRepository.save(location);
+            }
+
+            // Store TransactionPaymentMeta if Plaid payment meta exists
+            TransactionPaymentMeta paymentMeta = PlaidTransactionMapper.toTransactionPaymentMeta(plaidTransaction, transaction.getId());
+            if (paymentMeta != null) {
+                transactionPaymentMetaRepository.save(paymentMeta);
+            }
+
+            // Build DTOs
+            TransactionLocationDto locationDto = location != null ? TransactionLocationDto.builder()
+                .id(location.getId())
+                .transactionId(location.getTransactionId())
+                .address(location.getAddress())
+                .city(location.getCity())
+                .region(location.getRegion())
+                .postalCode(location.getPostalCode())
+                .country(location.getCountry())
+                .lat(location.getLat())
+                .lon(location.getLon())
+                .build() : null;
+
+            TransactionPaymentMetaDto paymentMetaDto = paymentMeta != null ? TransactionPaymentMetaDto.builder()
+                .id(paymentMeta.getId())
+                .transactionId(paymentMeta.getTransactionId())
+                .referenceNumber(paymentMeta.getReferenceNumber())
+                .payer(paymentMeta.getPayer())
+                .paymentMethod(paymentMeta.getPaymentMethod())
+                .paymentProcessor(paymentMeta.getPaymentProcessor())
+                .ppdId(paymentMeta.getPpdId())
+                .reason(paymentMeta.getReason())
+                .byOrderOf(paymentMeta.getByOrderOf())
+                .payee(paymentMeta.getPayee())
+                .build() : null;
+
+            return TransactionDto.builder()
+                .id(transaction.getId())
+                .plaidTransactionId(transaction.getPlaidTransactionId())
+                .plaidAccountId(transaction.getPlaidAccountId())
+                .categoryId(transaction.getCategoryId())
+                .amount(transaction.getAmount())
+                .isoCurrencyCode(transaction.getIsoCurrencyCode())
+                .unofficialCurrencyCode(transaction.getUnofficialCurrencyCode())
+                .date(transaction.getDate())
+                .datetime(transaction.getDatetime())
+                .name(transaction.getName())
+                .paymentChannel(transaction.getPaymentChannel())
+                .pending(transaction.getPending())
+                .pendingTransactionId(transaction.getPendingTransactionId())
+                .accountOwner(transaction.getAccountOwner())
+                .merchantName(transaction.getMerchantName())
+                .merchantCategoryId(transaction.getMerchantCategoryId())
+                .merchantCategory(transaction.getMerchantCategory())
+                .createdAt(transaction.getCreatedAt())
+                .updatedAt(transaction.getUpdatedAt())
+                .location(locationDto)
+                .paymentMeta(paymentMetaDto)
+                .build();
         } catch (Exception e) {
             log.error("Error storing transaction: {}", plaidTransaction.getTransactionId(), e);
+            return null;
         }
     }
-    
+
     /**
      * Update existing transaction with new data from Plaid
      */
-    private void updateTransactionFromPlaid(Transactions transaction, Transaction plaidTransaction) {
-        transaction.setAmount(plaidTransaction.getAmount().floatValue());
-        transaction.setPending(plaidTransaction.getPending());
-        transaction.setUpdatedAt(LocalDateTime.now().toString());
+    private void updateTransactionFromPlaid(Transaction transaction, com.plaid.client.model.Transaction plaidTransaction) {
+        Transaction updated = PlaidTransactionMapper.toTransaction(plaidTransaction, transaction.getId());
+        transactionRepository.update(updated);
     }
     
     /**
@@ -289,7 +315,7 @@ public class PlaidService {
     private void syncInstitution(String institutionId) {
         try {
             // Check if institution already exists
-            Optional<Institutions> existing = institutionRepository.findByPlaidInstitutionId(institutionId);
+            Optional<Institution> existing = institutionRepository.findByPlaidInstitutionId(institutionId);
             if (existing.isPresent()) {
                 return; // Already exists
             }
@@ -297,12 +323,14 @@ public class PlaidService {
             InstitutionsGetByIdRequest request = new InstitutionsGetByIdRequest()
                 .institutionId(institutionId)
                 .countryCodes(List.of(CountryCode.US));
-            
-            InstitutionsGetByIdResponse response = plaidApi.institutionsGetById(request).execute().body();
+            log.info("Calling Plaid: institutionsGetById request={}", request);
+            var responseRaw = plaidApi.institutionsGetById(request).execute();
+            log.info("Plaid institutionsGetById response: status={} body={}", responseRaw.code(), responseRaw.body());
+            InstitutionsGetByIdResponse response = responseRaw.body();
             if (response != null && response.getInstitution() != null) {
-                Institution plaidInstitution = response.getInstitution();
+                com.plaid.client.model.Institution plaidInstitution = response.getInstitution();
                 
-                Institutions institution = new Institutions();
+                Institution institution = new Institution();
                 institution.setId(UuidGenerator.generateUuid());
                 institution.setPlaidInstitutionId(institutionId);
                 institution.setName(plaidInstitution.getName());

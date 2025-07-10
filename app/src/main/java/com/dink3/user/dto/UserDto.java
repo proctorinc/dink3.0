@@ -1,6 +1,6 @@
 package com.dink3.user.dto;
 
-import com.dink3.jooq.tables.pojos.Users;
+import com.dink3.jooq.tables.pojos.User;
 import lombok.Builder;
 import lombok.Data;
 
@@ -20,10 +20,10 @@ public class UserDto {
     private String createdAt;
 
     /**
-     * Convert this DTO to a jOOQ Users POJO.
+     * Convert this DTO to a jOOQ User POJO.
      */
-    public Users toUsers() {
-        Users user = new Users();
+    public User toUser() {
+        User user = new User();
         user.setId(this.id);
         user.setUsername(this.username);
         user.setEmail(this.email);
@@ -34,9 +34,9 @@ public class UserDto {
     }
 
     /**
-     * Create a UserDto from a jOOQ Users POJO.
+     * Create a UserDto from a jOOQ User POJO.
      */
-    public static UserDto fromUsers(Users user) {
+    public static UserDto fromUsers(User user) {
         return UserDto.builder()
                 .id(user.getId())
                 .username(user.getUsername())

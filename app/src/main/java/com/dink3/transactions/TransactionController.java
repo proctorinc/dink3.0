@@ -1,7 +1,7 @@
 package com.dink3.transactions;
 
-import com.dink3.jooq.tables.pojos.Users;
-import com.dink3.jooq.tables.pojos.Transactions;
+import com.dink3.jooq.tables.pojos.User;
+import com.dink3.jooq.tables.pojos.Transaction;
 import com.dink3.plaid.service.PlaidDataService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,14 +30,9 @@ public class TransactionController {
      * Get all transactions for the authenticated user
      */
     @GetMapping
-    public ResponseEntity<List<Transactions>> getTransactions(@AuthenticationPrincipal Users user) {
-        if (user == null) {
-            log.warn("Unauthorized access attempt to get transactions");
-            return ResponseEntity.status(401).build();
-        }
-        
+    public ResponseEntity<List<Transaction>> getTransactions(@AuthenticationPrincipal User user) {
         log.info("Getting transactions for user: {}", user.getId());
-        List<Transactions> transactions = plaidDataService.getUserTransactions(user);
+        List<Transaction> transactions = plaidDataService.getUserTransactions(user);
         return ResponseEntity.ok(transactions);
     }
     
@@ -45,13 +40,8 @@ public class TransactionController {
      * Get a specific transaction by ID
      */
     @GetMapping("/{transactionId}")
-    public ResponseEntity<Transactions> getTransaction(@PathVariable String transactionId, 
-                                                      @AuthenticationPrincipal Users user) {
-        if (user == null) {
-            log.warn("Unauthorized access attempt to get transaction");
-            return ResponseEntity.status(401).build();
-        }
-        
+    public ResponseEntity<Transaction> getTransaction(@PathVariable String transactionId, 
+                                                      @AuthenticationPrincipal User user) {
         log.info("Getting transaction {} for user: {}", transactionId, user.getId());
         
         return plaidDataService.getTransactionById(transactionId, user)

@@ -4,20 +4,26 @@
 package com.dink3.jooq;
 
 
-import com.dink3.jooq.tables.Accounts;
-import com.dink3.jooq.tables.Institutions;
-import com.dink3.jooq.tables.PlaidItems;
-import com.dink3.jooq.tables.RefreshTokens;
-import com.dink3.jooq.tables.Transactions;
-import com.dink3.jooq.tables.UserSubscriptions;
-import com.dink3.jooq.tables.Users;
-import com.dink3.jooq.tables.records.AccountsRecord;
-import com.dink3.jooq.tables.records.InstitutionsRecord;
-import com.dink3.jooq.tables.records.PlaidItemsRecord;
-import com.dink3.jooq.tables.records.RefreshTokensRecord;
-import com.dink3.jooq.tables.records.TransactionsRecord;
-import com.dink3.jooq.tables.records.UserSubscriptionsRecord;
-import com.dink3.jooq.tables.records.UsersRecord;
+import com.dink3.jooq.tables.Account;
+import com.dink3.jooq.tables.Category;
+import com.dink3.jooq.tables.Institution;
+import com.dink3.jooq.tables.PlaidItem;
+import com.dink3.jooq.tables.RefreshToken;
+import com.dink3.jooq.tables.Transaction;
+import com.dink3.jooq.tables.TransactionLocation;
+import com.dink3.jooq.tables.TransactionPaymentMeta;
+import com.dink3.jooq.tables.User;
+import com.dink3.jooq.tables.UserSubscription;
+import com.dink3.jooq.tables.records.AccountRecord;
+import com.dink3.jooq.tables.records.CategoryRecord;
+import com.dink3.jooq.tables.records.InstitutionRecord;
+import com.dink3.jooq.tables.records.PlaidItemRecord;
+import com.dink3.jooq.tables.records.RefreshTokenRecord;
+import com.dink3.jooq.tables.records.TransactionLocationRecord;
+import com.dink3.jooq.tables.records.TransactionPaymentMetaRecord;
+import com.dink3.jooq.tables.records.TransactionRecord;
+import com.dink3.jooq.tables.records.UserRecord;
+import com.dink3.jooq.tables.records.UserSubscriptionRecord;
 
 import org.jooq.ForeignKey;
 import org.jooq.TableField;
@@ -37,21 +43,28 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final UniqueKey<AccountsRecord> ACCOUNTS__PK_ACCOUNTS = Internal.createUniqueKey(Accounts.ACCOUNTS, DSL.name("pk_accounts"), new TableField[] { Accounts.ACCOUNTS.ID }, true);
-    public static final UniqueKey<InstitutionsRecord> INSTITUTIONS__PK_INSTITUTIONS = Internal.createUniqueKey(Institutions.INSTITUTIONS, DSL.name("pk_institutions"), new TableField[] { Institutions.INSTITUTIONS.ID }, true);
-    public static final UniqueKey<InstitutionsRecord> INSTITUTIONS__UK_INSTITUTIONS_46871336 = Internal.createUniqueKey(Institutions.INSTITUTIONS, DSL.name("uk_institutions_46871336"), new TableField[] { Institutions.INSTITUTIONS.PLAID_INSTITUTION_ID }, true);
-    public static final UniqueKey<PlaidItemsRecord> PLAID_ITEMS__PK_PLAID_ITEMS = Internal.createUniqueKey(PlaidItems.PLAID_ITEMS, DSL.name("pk_plaid_items"), new TableField[] { PlaidItems.PLAID_ITEMS.ID }, true);
-    public static final UniqueKey<RefreshTokensRecord> REFRESH_TOKENS__PK_REFRESH_TOKENS = Internal.createUniqueKey(RefreshTokens.REFRESH_TOKENS, DSL.name("pk_refresh_tokens"), new TableField[] { RefreshTokens.REFRESH_TOKENS.ID }, true);
-    public static final UniqueKey<TransactionsRecord> TRANSACTIONS__PK_TRANSACTIONS = Internal.createUniqueKey(Transactions.TRANSACTIONS, DSL.name("pk_transactions"), new TableField[] { Transactions.TRANSACTIONS.ID }, true);
-    public static final UniqueKey<UserSubscriptionsRecord> USER_SUBSCRIPTIONS__PK_USER_SUBSCRIPTIONS = Internal.createUniqueKey(UserSubscriptions.USER_SUBSCRIPTIONS, DSL.name("pk_user_subscriptions"), new TableField[] { UserSubscriptions.USER_SUBSCRIPTIONS.ID }, true);
-    public static final UniqueKey<UsersRecord> USERS__PK_USERS = Internal.createUniqueKey(Users.USERS, DSL.name("pk_users"), new TableField[] { Users.USERS.ID }, true);
-    public static final UniqueKey<UsersRecord> USERS__UK_USERS_116436086 = Internal.createUniqueKey(Users.USERS, DSL.name("uk_users_116436086"), new TableField[] { Users.USERS.EMAIL }, true);
+    public static final UniqueKey<AccountRecord> ACCOUNT__PK_ACCOUNT = Internal.createUniqueKey(Account.ACCOUNT, DSL.name("pk_account"), new TableField[] { Account.ACCOUNT.ID }, true);
+    public static final UniqueKey<CategoryRecord> CATEGORY__PK_CATEGORY = Internal.createUniqueKey(Category.CATEGORY, DSL.name("pk_category"), new TableField[] { Category.CATEGORY.ID }, true);
+    public static final UniqueKey<InstitutionRecord> INSTITUTION__PK_INSTITUTION = Internal.createUniqueKey(Institution.INSTITUTION, DSL.name("pk_institution"), new TableField[] { Institution.INSTITUTION.ID }, true);
+    public static final UniqueKey<InstitutionRecord> INSTITUTION__UK_INSTITUTION_33047969 = Internal.createUniqueKey(Institution.INSTITUTION, DSL.name("uk_institution_33047969"), new TableField[] { Institution.INSTITUTION.PLAID_INSTITUTION_ID }, true);
+    public static final UniqueKey<PlaidItemRecord> PLAID_ITEM__PK_PLAID_ITEM = Internal.createUniqueKey(PlaidItem.PLAID_ITEM, DSL.name("pk_plaid_item"), new TableField[] { PlaidItem.PLAID_ITEM.ID }, true);
+    public static final UniqueKey<RefreshTokenRecord> REFRESH_TOKEN__PK_REFRESH_TOKEN = Internal.createUniqueKey(RefreshToken.REFRESH_TOKEN, DSL.name("pk_refresh_token"), new TableField[] { RefreshToken.REFRESH_TOKEN.ID }, true);
+    public static final UniqueKey<TransactionRecord> TRANSACTION__PK_TRANSACTION = Internal.createUniqueKey(Transaction.TRANSACTION, DSL.name("pk_transaction"), new TableField[] { Transaction.TRANSACTION.ID }, true);
+    public static final UniqueKey<TransactionLocationRecord> TRANSACTION_LOCATION__PK_TRANSACTION_LOCATION = Internal.createUniqueKey(TransactionLocation.TRANSACTION_LOCATION, DSL.name("pk_transaction_location"), new TableField[] { TransactionLocation.TRANSACTION_LOCATION.ID }, true);
+    public static final UniqueKey<TransactionPaymentMetaRecord> TRANSACTION_PAYMENT_META__PK_TRANSACTION_PAYMENT_META = Internal.createUniqueKey(TransactionPaymentMeta.TRANSACTION_PAYMENT_META, DSL.name("pk_transaction_payment_meta"), new TableField[] { TransactionPaymentMeta.TRANSACTION_PAYMENT_META.ID }, true);
+    public static final UniqueKey<UserRecord> USER__PK_USER = Internal.createUniqueKey(User.USER, DSL.name("pk_user"), new TableField[] { User.USER.ID }, true);
+    public static final UniqueKey<UserRecord> USER__UK_USER_29017231 = Internal.createUniqueKey(User.USER, DSL.name("uk_user_29017231"), new TableField[] { User.USER.EMAIL }, true);
+    public static final UniqueKey<UserSubscriptionRecord> USER_SUBSCRIPTION__PK_USER_SUBSCRIPTION = Internal.createUniqueKey(UserSubscription.USER_SUBSCRIPTION, DSL.name("pk_user_subscription"), new TableField[] { UserSubscription.USER_SUBSCRIPTION.ID }, true);
 
     // -------------------------------------------------------------------------
     // FOREIGN KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final ForeignKey<PlaidItemsRecord, UsersRecord> PLAID_ITEMS__FK_PLAID_ITEMS_PK_USERS = Internal.createForeignKey(PlaidItems.PLAID_ITEMS, DSL.name("fk_plaid_items_pk_users"), new TableField[] { PlaidItems.PLAID_ITEMS.USER_ID }, Keys.USERS__PK_USERS, new TableField[] { Users.USERS.ID }, true);
-    public static final ForeignKey<RefreshTokensRecord, UsersRecord> REFRESH_TOKENS__FK_REFRESH_TOKENS_PK_USERS = Internal.createForeignKey(RefreshTokens.REFRESH_TOKENS, DSL.name("fk_refresh_tokens_pk_users"), new TableField[] { RefreshTokens.REFRESH_TOKENS.USER_ID }, Keys.USERS__PK_USERS, new TableField[] { Users.USERS.ID }, true);
-    public static final ForeignKey<UserSubscriptionsRecord, UsersRecord> USER_SUBSCRIPTIONS__FK_USER_SUBSCRIPTIONS_PK_USERS = Internal.createForeignKey(UserSubscriptions.USER_SUBSCRIPTIONS, DSL.name("fk_user_subscriptions_pk_users"), new TableField[] { UserSubscriptions.USER_SUBSCRIPTIONS.USER_ID }, Keys.USERS__PK_USERS, new TableField[] { Users.USERS.ID }, true);
+    public static final ForeignKey<CategoryRecord, UserRecord> CATEGORY__FK_CATEGORY_PK_USER = Internal.createForeignKey(Category.CATEGORY, DSL.name("fk_category_pk_user"), new TableField[] { Category.CATEGORY.USER_ID }, Keys.USER__PK_USER, new TableField[] { User.USER.ID }, true);
+    public static final ForeignKey<PlaidItemRecord, UserRecord> PLAID_ITEM__FK_PLAID_ITEM_PK_USER = Internal.createForeignKey(PlaidItem.PLAID_ITEM, DSL.name("fk_plaid_item_pk_user"), new TableField[] { PlaidItem.PLAID_ITEM.USER_ID }, Keys.USER__PK_USER, new TableField[] { User.USER.ID }, true);
+    public static final ForeignKey<RefreshTokenRecord, UserRecord> REFRESH_TOKEN__FK_REFRESH_TOKEN_PK_USER = Internal.createForeignKey(RefreshToken.REFRESH_TOKEN, DSL.name("fk_refresh_token_pk_user"), new TableField[] { RefreshToken.REFRESH_TOKEN.USER_ID }, Keys.USER__PK_USER, new TableField[] { User.USER.ID }, true);
+    public static final ForeignKey<TransactionRecord, CategoryRecord> TRANSACTION__FK_TRANSACTION_PK_CATEGORY = Internal.createForeignKey(Transaction.TRANSACTION, DSL.name("fk_transaction_pk_category"), new TableField[] { Transaction.TRANSACTION.CATEGORY_ID }, Keys.CATEGORY__PK_CATEGORY, new TableField[] { Category.CATEGORY.ID }, true);
+    public static final ForeignKey<TransactionLocationRecord, TransactionRecord> TRANSACTION_LOCATION__FK_TRANSACTION_LOCATION_PK_TRANSACTION = Internal.createForeignKey(TransactionLocation.TRANSACTION_LOCATION, DSL.name("fk_transaction_location_pk_transaction"), new TableField[] { TransactionLocation.TRANSACTION_LOCATION.TRANSACTION_ID }, Keys.TRANSACTION__PK_TRANSACTION, new TableField[] { Transaction.TRANSACTION.ID }, true);
+    public static final ForeignKey<TransactionPaymentMetaRecord, TransactionRecord> TRANSACTION_PAYMENT_META__FK_TRANSACTION_PAYMENT_META_PK_TRANSACTION = Internal.createForeignKey(TransactionPaymentMeta.TRANSACTION_PAYMENT_META, DSL.name("fk_transaction_payment_meta_pk_transaction"), new TableField[] { TransactionPaymentMeta.TRANSACTION_PAYMENT_META.TRANSACTION_ID }, Keys.TRANSACTION__PK_TRANSACTION, new TableField[] { Transaction.TRANSACTION.ID }, true);
+    public static final ForeignKey<UserSubscriptionRecord, UserRecord> USER_SUBSCRIPTION__FK_USER_SUBSCRIPTION_PK_USER = Internal.createForeignKey(UserSubscription.USER_SUBSCRIPTION, DSL.name("fk_user_subscription_pk_user"), new TableField[] { UserSubscription.USER_SUBSCRIPTION.USER_ID }, Keys.USER__PK_USER, new TableField[] { User.USER.ID }, true);
 }

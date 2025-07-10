@@ -1,7 +1,9 @@
 package com.dink3.auth;
 
-import com.dink3.jooq.tables.pojos.Users;
+import com.dink3.jooq.tables.pojos.User;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -22,38 +24,30 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest body) {
-        String email = body.email;
-        String username = body.username;
-        String password = body.password;
-        log.info("Registration attempt for email: {}", email);
-        if (!authService.validatePasswordStrength(password)) {
-            log.warn("Registration failed for email: {} due to weak password", email);
-            return ResponseEntity.badRequest().body("Password does not meet requirements");
-        }
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest body) {
         try {
-            Users user = authService.register(email, username, password);
-            log.info("User registered successfully: {}", email);
+            User user = authService.register(body.email, body.username, body.password);
+            log.info("User registered successfully: {}", body.email);
             String jwt = authService.generateJwtToken(user);
             String refresh = authService.generateRefreshToken(user);
             return ResponseEntity.ok(Map.of("token", jwt, "refreshToken", refresh));
         } catch (IllegalArgumentException e) {
-            log.warn("Registration failed for email: {} - {}", email, e.getMessage());
+            log.warn("Registration failed for email: {} - {}", body.email, e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest body) {
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest body) {
         String email = body.email;
         String password = body.password;
         log.info("Login attempt for email: {}", email);
-        Optional<Users> userOpt = authService.authenticate(email, password);
+        Optional<User> userOpt = authService.authenticate(email, password);
         if (userOpt.isEmpty()) {
             log.warn("Login failed for email: {}", email);
             return ResponseEntity.status(401).body("Invalid credentials");
         }
-        Users user = userOpt.get();
+        User user = userOpt.get();
         log.info("Login successful for email: {}", email);
         String jwt = authService.generateJwtToken(user);
         String refresh = authService.generateRefreshToken(user);

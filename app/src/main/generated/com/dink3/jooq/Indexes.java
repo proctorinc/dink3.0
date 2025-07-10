@@ -4,10 +4,10 @@
 package com.dink3.jooq;
 
 
-import com.dink3.jooq.tables.Accounts;
-import com.dink3.jooq.tables.PlaidItems;
-import com.dink3.jooq.tables.Transactions;
-import com.dink3.jooq.tables.UserSubscriptions;
+import com.dink3.jooq.tables.Account;
+import com.dink3.jooq.tables.PlaidItem;
+import com.dink3.jooq.tables.Transaction;
+import com.dink3.jooq.tables.UserSubscription;
 
 import org.jooq.Index;
 import org.jooq.OrderField;
@@ -25,9 +25,9 @@ public class Indexes {
     // INDEX definitions
     // -------------------------------------------------------------------------
 
-    public static final Index IDX_ACCOUNTS_PLAID_ITEM_ID = Internal.createIndex(DSL.name("idx_accounts_plaid_item_id"), Accounts.ACCOUNTS, new OrderField[] { Accounts.ACCOUNTS.PLAID_ITEM_ID }, false);
-    public static final Index IDX_PLAID_ITEMS_USER_ID = Internal.createIndex(DSL.name("idx_plaid_items_user_id"), PlaidItems.PLAID_ITEMS, new OrderField[] { PlaidItems.PLAID_ITEMS.USER_ID }, false);
-    public static final Index IDX_TRANSACTIONS_DATE = Internal.createIndex(DSL.name("idx_transactions_date"), Transactions.TRANSACTIONS, new OrderField[] { Transactions.TRANSACTIONS.DATE }, false);
-    public static final Index IDX_TRANSACTIONS_PLAID_ACCOUNT_ID = Internal.createIndex(DSL.name("idx_transactions_plaid_account_id"), Transactions.TRANSACTIONS, new OrderField[] { Transactions.TRANSACTIONS.PLAID_ACCOUNT_ID }, false);
-    public static final Index IDX_USER_SUBSCRIPTIONS_USER_ID = Internal.createIndex(DSL.name("idx_user_subscriptions_user_id"), UserSubscriptions.USER_SUBSCRIPTIONS, new OrderField[] { UserSubscriptions.USER_SUBSCRIPTIONS.USER_ID }, false);
+    public static final Index IDX_ACCOUNTS_PLAID_ITEM_ID = Internal.createIndex(DSL.name("idx_accounts_plaid_item_id"), Account.ACCOUNT, new OrderField[] { Account.ACCOUNT.PLAID_ITEM_ID }, false);
+    public static final Index IDX_PLAID_ITEMS_USER_ID = Internal.createIndex(DSL.name("idx_plaid_items_user_id"), PlaidItem.PLAID_ITEM, new OrderField[] { PlaidItem.PLAID_ITEM.USER_ID }, false);
+    public static final Index IDX_TRANSACTIONS_DATE = Internal.createIndex(DSL.name("idx_transactions_date"), Transaction.TRANSACTION, new OrderField[] { Transaction.TRANSACTION.DATE }, false);
+    public static final Index IDX_TRANSACTIONS_PLAID_ACCOUNT_ID = Internal.createIndex(DSL.name("idx_transactions_plaid_account_id"), Transaction.TRANSACTION, new OrderField[] { Transaction.TRANSACTION.PLAID_ACCOUNT_ID }, false);
+    public static final Index IDX_USER_SUBSCRIPTIONS_USER_ID = Internal.createIndex(DSL.name("idx_user_subscriptions_user_id"), UserSubscription.USER_SUBSCRIPTION, new OrderField[] { UserSubscription.USER_SUBSCRIPTION.USER_ID }, false);
 }

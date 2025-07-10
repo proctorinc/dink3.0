@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Plaid Link Example</title>
+  <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
+</head>
+<body>
+  <h1>Link your bank account</h1>
+  <label for="bearer-token">Bearer Token:</label>
+  <input type="text" id="bearer-token" placeholder="Paste your token here" size="60" />
+  <button id="link-button">Link Account</button>
+  <div id="result"></div>
+  <script>
+    function getAuthHeader() {
+      const token = document.getElementById('bearer-token').value.trim();
+      return token ? { 'Authorization': 'Bearer ' + token } : {};
+    }
+
+    async function getLinkToken() {
+      const res = await fetch('/api/v1/plaid/link-token', {
+        method: 'POST',
+        headers: { ...getAuthHeader() }
+      });
+      if (!res.ok) throw new Error('Failed to get link token');
+      const data = await res.json();
+      return data.linkToken;
+    }
+
+    async function exchangePublicToken(public_token) {
+        console.log("Exchanging public token now!")
+      const res = await fetch('/api/v1/plaid/exchange-token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
+        body: JSON.stringify({ publicToken: public_token })
+      });
+      return res.ok;
+    }
+
+    document.getElementById('link-button').onclick = async function() {
+      try {
+        const linkToken = await getLinkToken();
+        const handler = Plaid.create({
+          token: linkToken,
+          onSuccess: async function(public_token, metadata) {
+            console.log("public token:", public_token)
+            document.getElementById('result').innerText = 'Linking...';
+            const ok = await exchangePublicToken(public_token);
+            document.getElementById('result').innerText = ok ? 'Account linked!' : 'Failed to link account.';
+          },
+          onExit: function(err, metadata) {
+            if (err) {
+              document.getElementById('result').innerText = 'Error: ' + err.display_message;
+            }
+          }
+        });
+        handler.open();
+      } catch (e) {
+        document.getElementById('result').innerText = 'Error: ' + e.message;
+      }
+    };
+  </script>
+</body>
+</html> 

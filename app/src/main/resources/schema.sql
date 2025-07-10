@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE IF NOT EXISTS user (
     id TEXT PRIMARY KEY,
     username TEXT,
     email TEXT NOT NULL UNIQUE,
@@ -7,17 +7,17 @@ CREATE TABLE IF NOT EXISTS users (
     created_at TEXT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS refresh_tokens (
+CREATE TABLE IF NOT EXISTS refresh_token (
     id TEXT PRIMARY KEY,
     user_id TEXT NOT NULL,
     token TEXT NOT NULL,
     expires_at TEXT NOT NULL,
     created_at TEXT NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
 );
 
 -- Plaid Items (represents a connection to a financial institution)
-CREATE TABLE IF NOT EXISTS plaid_items (
+CREATE TABLE IF NOT EXISTS plaid_item (
     id TEXT PRIMARY KEY,
     user_id TEXT NOT NULL,
     plaid_item_id TEXT NOT NULL UNIQUE,
@@ -27,11 +27,11 @@ CREATE TABLE IF NOT EXISTS plaid_items (
     last_webhook TEXT,
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
 );
 
 -- Institutions
-CREATE TABLE IF NOT EXISTS institutions (
+CREATE TABLE IF NOT EXISTS institution (
     id TEXT PRIMARY KEY,
     plaid_institution_id TEXT NOT NULL UNIQUE,
     name TEXT NOT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS institutions (
 );
 
 -- Accounts
-CREATE TABLE IF NOT EXISTS accounts (
+CREATE TABLE IF NOT EXISTS account (
     id TEXT PRIMARY KEY,
     plaid_item_id TEXT NOT NULL,
     plaid_account_id TEXT NOT NULL,
@@ -58,62 +58,88 @@ CREATE TABLE IF NOT EXISTS accounts (
     unofficial_currency_code TEXT,
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    FOREIGN KEY (plaid_item_id) REFERENCES plaid_items(plaid_item_id) ON DELETE CASCADE,
+    FOREIGN KEY (plaid_item_id) REFERENCES plaid_item(plaid_item_id) ON DELETE CASCADE,
     UNIQUE(plaid_item_id, plaid_account_id)
 );
 
+CREATE TABLE IF NOT EXISTS category (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    name  TEXT NOT NULL UNIQUE,
+    description TEXT,
+    ignore BOOLEAN DEFAULT false,
+    hide BOOLEAN DEFAULT false,
+    startDate TEXT,
+    endDate TEXT,
+    FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
+);
+
 -- Transactions
-CREATE TABLE IF NOT EXISTS transactions (
+CREATE TABLE IF NOT EXISTS `transaction` (
     id TEXT PRIMARY KEY,
     plaid_transaction_id TEXT NOT NULL UNIQUE,
     plaid_account_id TEXT NOT NULL,
+    category_id TEXT,
     amount REAL NOT NULL,
     iso_currency_code TEXT,
     unofficial_currency_code TEXT,
     date TEXT NOT NULL,
     datetime TEXT,
     name TEXT NOT NULL,
-    merchant_name TEXT,
     payment_channel TEXT,
     pending BOOLEAN NOT NULL DEFAULT 0,
     pending_transaction_id TEXT,
     account_owner TEXT,
-    category_id TEXT,
-    category TEXT,
-    location_address TEXT,
-    location_city TEXT,
-    location_region TEXT,
-    location_postal_code TEXT,
-    location_country TEXT,
-    location_lat REAL,
-    location_lon REAL,
-    payment_meta_reference_number TEXT,
-    payment_meta_payer TEXT,
-    payment_meta_payment_method TEXT,
-    payment_meta_payment_processor TEXT,
-    payment_meta_ppd_id TEXT,
-    payment_meta_reason TEXT,
-    payment_meta_by_order_of TEXT,
-    payment_meta_payee TEXT,
+    merchant_name TEXT,
+    merchant_category_id TEXT,
+    merchant_category TEXT,
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    FOREIGN KEY (plaid_account_id) REFERENCES accounts(plaid_account_id) ON DELETE CASCADE
+    FOREIGN KEY (category_id) REFERENCES category(id) ON DELETE CASCADE,
+    FOREIGN KEY (plaid_account_id) REFERENCES account(plaid_account_id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS transaction_location (
+    id TEXT PRIMARY KEY,
+    transaction_id TEXT NOT NULL UNIQUE,
+    address TEXT,
+    city TEXT,
+    region TEXT,
+    postal_code TEXT,
+    country TEXT,
+    lat REAL,
+    lon REAL,
+    FOREIGN KEY (transaction_id) REFERENCES `transaction`(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS transaction_payment_meta (
+    id TEXT PRIMARY KEY,
+    transaction_id TEXT NOT NULL UNIQUE,
+    reference_number TEXT,
+    payer TEXT,
+    payment_method TEXT,
+    payment_processor TEXT,
+    ppd_id TEXT,
+    reason TEXT,
+    by_order_of TEXT,
+    payee TEXT,
+    FOREIGN KEY (transaction_id) REFERENCES `transaction`(id) ON DELETE CASCADE
 );
 
 -- User subscription tiers for sync frequency
-CREATE TABLE IF NOT EXISTS user_subscriptions (
+CREATE TABLE IF NOT EXISTS user_subscription (
     id TEXT PRIMARY KEY,
     user_id TEXT NOT NULL UNIQUE,
     tier TEXT NOT NULL DEFAULT 'basic', -- 'basic' or 'premium'
     last_sync_at TEXT,
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
 );
 
 -- Indexes for better performance
-CREATE INDEX IF NOT EXISTS idx_plaid_items_user_id ON plaid_items(user_id);
-CREATE INDEX IF NOT EXISTS idx_accounts_plaid_item_id ON accounts(plaid_item_id);
-CREATE INDEX IF NOT EXISTS idx_transactions_plaid_account_id ON transactions(plaid_account_id);
-CREATE INDEX IF NOT EXISTS idx_transactions_date ON transactions(date);
-CREATE INDEX IF NOT EXISTS idx_user_subscriptions_user_id ON user_subscriptions(user_id); 
+CREATE INDEX IF NOT EXISTS idx_plaid_items_user_id ON plaid_item(user_id);
+CREATE INDEX IF NOT EXISTS idx_accounts_plaid_item_id ON account(plaid_item_id);
+CREATE INDEX IF NOT EXISTS idx_transactions_plaid_account_id ON `transaction`(plaid_account_id);
+CREATE INDEX IF NOT EXISTS idx_transactions_date ON `transaction`(date);
+CREATE INDEX IF NOT EXISTS idx_user_subscriptions_user_id ON user_subscription(user_id); 

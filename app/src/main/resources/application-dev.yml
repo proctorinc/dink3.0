@@ -1,5 +1,0 @@
-spring:
-  datasource:
-    url: jdbc:sqlite:./dink3-dev.db
-jwt:
-  secret: "dev-secret-key-change-me" 

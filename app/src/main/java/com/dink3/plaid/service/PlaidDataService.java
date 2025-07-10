@@ -1,16 +1,16 @@
 package com.dink3.plaid.service;
 
-import com.dink3.jooq.tables.pojos.Users;
-import com.dink3.jooq.tables.pojos.PlaidItems;
-import com.dink3.jooq.tables.pojos.Institutions;
-import com.dink3.jooq.tables.pojos.Accounts;
-import com.dink3.jooq.tables.pojos.Transactions;
-import com.dink3.jooq.tables.pojos.UserSubscriptions;
+import com.dink3.jooq.tables.pojos.User;
+import com.dink3.jooq.tables.pojos.PlaidItem;
+import com.dink3.jooq.tables.pojos.Institution;
+import com.dink3.jooq.tables.pojos.Account;
+import com.dink3.jooq.tables.pojos.Transaction;
+import com.dink3.jooq.tables.pojos.UserSubscription;
 import com.dink3.plaid.repository.PlaidItemRepository;
 import com.dink3.institutions.InstitutionRepository;
 import com.dink3.accounts.AccountRepository;
-import com.dink3.transactions.TransactionRepository;
 import com.dink3.plaid.repository.UserSubscriptionRepository;
+import com.dink3.transactions.repositories.TransactionRepository;
 import com.dink3.plaid.PlaidService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +21,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import com.dink3.util.UuidGenerator;
+import com.dink3.plaid.service.SyncNotAllowedException;
 
 @Service
 public class PlaidDataService {
@@ -50,18 +51,18 @@ public class PlaidDataService {
     /**
      * Sync all data for a user based on their subscription tier
      */
-    public void syncUserData(Users user) {
-        UserSubscriptions subscription = getUserSubscription(user);
+    public void syncUserData(User user) {
+        UserSubscription subscription = getUserSubscription(user);
         
         // Check if user can sync based on their tier
         if (!canUserSync(subscription)) {
-            throw new RuntimeException("Sync not available. Premium users can sync anytime. Basic users can sync once every 24 hours.");
+            throw new SyncNotAllowedException("Sync not available. Basic users can sync once every 24 hours. Upgrade to Premium to sync anytime.");
         }
         
         // Get all Plaid items for the user
-        List<PlaidItems> items = plaidItemRepository.findByUserId(user.getId());
+        List<PlaidItem> items = plaidItemRepository.findByUserId(user.getId());
         
-        for (PlaidItems item : items) {
+        for (PlaidItem item : items) {
             plaidService.syncItemData(item);
         }
         
@@ -74,8 +75,8 @@ public class PlaidDataService {
     /**
      * Get all accounts for a user
      */
-    public List<Accounts> getUserAccounts(Users user) {
-        List<PlaidItems> items = plaidItemRepository.findByUserId(user.getId());
+    public List<Account> getUserAccounts(User user) {
+        List<PlaidItem> items = plaidItemRepository.findByUserId(user.getId());
         return items.stream()
                 .flatMap(item -> accountRepository.findByPlaidItemId(item.getPlaidItemId()).stream())
                 .toList();
@@ -84,11 +85,11 @@ public class PlaidDataService {
     /**
      * Get a specific account by ID
      */
-    public Optional<Accounts> getAccountById(String accountId, Users user) {
+    public Optional<Account> getAccountById(String accountId, User user) {
         return accountRepository.findById(accountId)
                 .filter(account -> {
                     // Verify the account belongs to the user
-                    List<PlaidItems> userItems = plaidItemRepository.findByUserId(user.getId());
+                    List<PlaidItem> userItems = plaidItemRepository.findByUserId(user.getId());
                     return userItems.stream()
                             .anyMatch(item -> item.getPlaidItemId().equals(account.getPlaidItemId()));
                 });
@@ -97,11 +98,11 @@ public class PlaidDataService {
     /**
      * Get all transactions for a user
      */
-    public List<Transactions> getUserTransactions(Users user) {
-        List<PlaidItems> items = plaidItemRepository.findByUserId(user.getId());
+    public List<Transaction> getUserTransactions(User user) {
+        List<PlaidItem> items = plaidItemRepository.findByUserId(user.getId());
         List<String> userAccountIds = items.stream()
                 .flatMap(item -> accountRepository.findByPlaidItemId(item.getPlaidItemId()).stream())
-                .map(Accounts::getPlaidAccountId)
+                .map(Account::getPlaidAccountId)
                 .toList();
         
         return transactionRepository.findAll().stream()
@@ -112,14 +113,14 @@ public class PlaidDataService {
     /**
      * Get a specific transaction by ID
      */
-    public Optional<Transactions> getTransactionById(String transactionId, Users user) {
+    public Optional<Transaction> getTransactionById(String transactionId, User user) {
         return transactionRepository.findById(transactionId)
                 .filter(transaction -> {
                     // Verify the transaction belongs to the user
-                    List<PlaidItems> userItems = plaidItemRepository.findByUserId(user.getId());
+                    List<PlaidItem> userItems = plaidItemRepository.findByUserId(user.getId());
                     List<String> userAccountIds = userItems.stream()
                             .flatMap(item -> accountRepository.findByPlaidItemId(item.getPlaidItemId()).stream())
-                            .map(Accounts::getPlaidAccountId)
+                            .map(Account::getPlaidAccountId)
                             .toList();
                     return userAccountIds.contains(transaction.getPlaidAccountId());
                 });
@@ -128,28 +129,28 @@ public class PlaidDataService {
     /**
      * Get all institutions
      */
-    public List<Institutions> getAllInstitutions() {
+    public List<Institution> getAllInstitutions() {
         return institutionRepository.findAll();
     }
     
     /**
      * Get a specific institution by ID
      */
-    public Optional<Institutions> getInstitutionById(String institutionId) {
+    public Optional<Institution> getInstitutionById(String institutionId) {
         return institutionRepository.findById(institutionId);
     }
     
     /**
      * Get user subscription or create default basic subscription
      */
-    private UserSubscriptions getUserSubscription(Users user) {
-        Optional<UserSubscriptions> existing = userSubscriptionRepository.findByUserId(user.getId());
+    private UserSubscription getUserSubscription(User user) {
+        Optional<UserSubscription> existing = userSubscriptionRepository.findByUserId(user.getId());
         if (existing.isPresent()) {
             return existing.get();
         }
         
         // Create default basic subscription
-        UserSubscriptions subscription = new UserSubscriptions();
+        UserSubscription subscription = new UserSubscription();
         subscription.setId(UuidGenerator.generateUuid());
         subscription.setUserId(user.getId());
         subscription.setTier("basic");
@@ -163,7 +164,7 @@ public class PlaidDataService {
     /**
      * Check if user can sync based on their subscription tier
      */
-    private boolean canUserSync(UserSubscriptions subscription) {
+    private boolean canUserSync(UserSubscription subscription) {
         if ("premium".equals(subscription.getTier())) {
             return true; // Premium users can sync anytime
         }
@@ -183,7 +184,7 @@ public class PlaidDataService {
     /**
      * Update the last sync time for a user
      */
-    private void updateLastSyncTime(UserSubscriptions subscription) {
+    private void updateLastSyncTime(UserSubscription subscription) {
         subscription.setLastSyncAt(LocalDateTime.now().toString());
         subscription.setUpdatedAt(LocalDateTime.now().toString());
         userSubscriptionRepository.update(subscription);
