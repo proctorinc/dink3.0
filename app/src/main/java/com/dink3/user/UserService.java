@@ -4,17 +4,20 @@ import com.dink3.jooq.tables.pojos.User;
 import com.dink3.jooq.tables.pojos.UserSubscription;
 import com.dink3.plaid.repository.UserSubscriptionRepository;
 import com.dink3.user.dto.UserProfileDto;
-
-import org.springframework.stereotype.Service;
-
+import com.dink3.user.dto.UserSubscriptionDto;
 import java.util.Optional;
+import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
+
     private final UserRepository userRepository;
     private final UserSubscriptionRepository userSubscriptionRepository;
 
-    public UserService(UserRepository userRepository, UserSubscriptionRepository userSubscriptionRepository) {
+    public UserService(
+        UserRepository userRepository,
+        UserSubscriptionRepository userSubscriptionRepository
+    ) {
         this.userRepository = userRepository;
         this.userSubscriptionRepository = userSubscriptionRepository;
     }
@@ -33,15 +36,24 @@ public class UserService {
             return Optional.empty();
         }
         User user = userOpt.get();
-        Optional<UserSubscription> subscriptionOpt = userSubscriptionRepository.findByUserId(userId);
-        UserProfileDto profile = new UserProfileDto(
-            user.getId(),
-            user.getUsername(),
-            user.getEmail(),
-            user.getRole(),
-            user.getCreatedAt(),
-            subscriptionOpt.orElse(null)
-        );
+        Optional<UserSubscription> subscriptionOpt =
+            userSubscriptionRepository.findByUserId(userId);
+        UserSubscriptionDto subscription = null;
+
+        if (subscriptionOpt.isPresent()) {
+            subscription = UserSubscriptionDto.fromUserSubscriptions(
+                subscriptionOpt.get()
+            );
+        }
+
+        UserProfileDto profile = UserProfileDto.builder()
+            .id(user.getId())
+            .username(user.getUsername())
+            .email(user.getEmail())
+            .role(user.getRole())
+            .createdAt(user.getCreatedAt())
+            .subscription(subscription)
+            .build();
         return Optional.of(profile);
     }
-} 
+}

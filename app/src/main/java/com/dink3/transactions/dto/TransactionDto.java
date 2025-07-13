@@ -1,16 +1,17 @@
 package com.dink3.transactions.dto;
 
-import com.dink3.transactions.dto.TransactionLocationDto;
-import com.dink3.transactions.dto.TransactionPaymentMetaDto;
-import com.plaid.client.model.Transaction;
+import com.dink3.jooq.tables.pojos.Transaction;
+import com.dink3.jooq.tables.pojos.TransactionLocation;
+import com.dink3.jooq.tables.pojos.TransactionPaymentMeta;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Data;
-
-import java.time.LocalDateTime;
+import org.jooq.Record;
 
 @Data
 @Builder
 public class TransactionDto {
+
     private String id;
     private String userId;
     private String plaidTransactionId;
@@ -31,60 +32,12 @@ public class TransactionDto {
     private String merchantCategory;
     private String createdAt;
     private String updatedAt;
-    private TransactionLocationDto location;
-    private TransactionPaymentMetaDto paymentMeta;
-    
-    /**
-     * Convert from Plaid Transaction to TransactionDto
-     */
-    public static TransactionDto fromPlaidTransaction(Transaction plaidTransaction, String userId) {
-        return TransactionDto.builder()
-                .plaidTransactionId(plaidTransaction.getTransactionId())
-                .userId(userId)
-                .plaidAccountId(plaidTransaction.getAccountId())
-                .categoryId(plaidTransaction.getCategoryId())
-                .amount(plaidTransaction.getAmount() != null ? plaidTransaction.getAmount().floatValue() : null)
-                .isoCurrencyCode(plaidTransaction.getIsoCurrencyCode())
-                .unofficialCurrencyCode(plaidTransaction.getUnofficialCurrencyCode())
-                .date(plaidTransaction.getDate() != null ? plaidTransaction.getDate().toString() : null)
-                .datetime(plaidTransaction.getDatetime() != null ? plaidTransaction.getDatetime().toString() : null)
-                .name(plaidTransaction.getName())
-                .paymentChannel(plaidTransaction.getPaymentChannel() != null ? plaidTransaction.getPaymentChannel().getValue() : null)
-                .pending(plaidTransaction.getPending())
-                .pendingTransactionId(plaidTransaction.getPendingTransactionId())
-                .accountOwner(plaidTransaction.getAccountOwner())
-                .merchantName(plaidTransaction.getMerchantName())
-                .merchantCategory(plaidTransaction.getCategory() != null ? String.join(", ", plaidTransaction.getCategory()) : null)
-                .build();
-    }
-    
-    /**
-     * Update an existing Transaction entity with Plaid data (preserves ID and user-specific fields)
-     */
-    public void updateExistingTransaction(com.dink3.jooq.tables.pojos.Transaction existingTransaction) {
-        existingTransaction.setPlaidAccountId(this.plaidAccountId);
-        existingTransaction.setCategoryId(this.categoryId);
-        existingTransaction.setAmount(this.amount);
-        existingTransaction.setIsoCurrencyCode(this.isoCurrencyCode);
-        existingTransaction.setUnofficialCurrencyCode(this.unofficialCurrencyCode);
-        existingTransaction.setDate(this.date);
-        existingTransaction.setDatetime(this.datetime);
-        existingTransaction.setName(this.name);
-        existingTransaction.setPaymentChannel(this.paymentChannel);
-        existingTransaction.setPending(this.pending);
-        existingTransaction.setPendingTransactionId(this.pendingTransactionId);
-        existingTransaction.setAccountOwner(this.accountOwner);
-        existingTransaction.setMerchantName(this.merchantName);
-        existingTransaction.setMerchantCategoryId(this.merchantCategoryId);
-        existingTransaction.setMerchantCategory(this.merchantCategory);
-        existingTransaction.setUpdatedAt(LocalDateTime.now().toString());
-    }
-    
+
     /**
      * Convert to Transaction entity (for new transactions)
      */
-    public com.dink3.jooq.tables.pojos.Transaction toTransaction() {
-        com.dink3.jooq.tables.pojos.Transaction transaction = new com.dink3.jooq.tables.pojos.Transaction();
+    public Transaction toTransaction() {
+        Transaction transaction = new Transaction();
         transaction.setId(this.id);
         transaction.setUserId(this.userId);
         transaction.setPlaidTransactionId(this.plaidTransactionId);
@@ -106,5 +59,34 @@ public class TransactionDto {
         transaction.setCreatedAt(this.createdAt);
         transaction.setUpdatedAt(this.updatedAt);
         return transaction;
+    }
+
+    public static TransactionDto fromTransaction(Transaction transaction) {
+        return TransactionDto.builder()
+            .id(transaction.getId())
+            .plaidAccountId(transaction.getPlaidAccountId())
+            .amount(transaction.getAmount())
+            .isoCurrencyCode(transaction.getIsoCurrencyCode())
+            .unofficialCurrencyCode(transaction.getUnofficialCurrencyCode())
+            .date(transaction.getDate())
+            .datetime(transaction.getDatetime())
+            .name(transaction.getName())
+            .paymentChannel(transaction.getPaymentChannel())
+            .pending(transaction.getPending())
+            .pendingTransactionId(transaction.getPendingTransactionId())
+            .accountOwner(transaction.getAccountOwner())
+            .merchantName(transaction.getMerchantName())
+            .merchantCategoryId(transaction.getMerchantCategoryId())
+            .merchantCategory(transaction.getMerchantCategory())
+            .createdAt(transaction.getCreatedAt())
+            .updatedAt(transaction.getUpdatedAt())
+            .build();
+    }
+
+    public static TransactionDto fromRecord(Record record) {
+        // Map to POJOs using JOOQ
+        Transaction transaction = record.into(Transaction.class);
+
+        return TransactionDto.fromTransaction(transaction);
     }
 }

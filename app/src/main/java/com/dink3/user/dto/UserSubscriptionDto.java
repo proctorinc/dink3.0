@@ -1,10 +1,9 @@
 package com.dink3.user.dto;
 
 import com.dink3.jooq.tables.pojos.UserSubscription;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Data;
-
-import java.time.LocalDateTime;
 
 /**
  * DTO for user subscription with Lombok builder support.
@@ -12,8 +11,7 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 public class UserSubscriptionDto {
-    private String id;
-    private String userId;
+
     private String tier;
     private String lastSyncAt;
     private String createdAt;
@@ -24,8 +22,6 @@ public class UserSubscriptionDto {
      */
     public UserSubscription toUserSubscription() {
         UserSubscription subscription = new UserSubscription();
-        subscription.setId(id);
-        subscription.setUserId(userId);
         subscription.setTier(tier);
         subscription.setLastSyncAt(lastSyncAt);
         subscription.setCreatedAt(createdAt);
@@ -36,15 +32,15 @@ public class UserSubscriptionDto {
     /**
      * Create a UserSubscriptionDto from a jOOQ UserSubscriptions POJO.
      */
-    public static UserSubscriptionDto fromUserSubscriptions(UserSubscription subscription) {
+    public static UserSubscriptionDto fromUserSubscriptions(
+        UserSubscription subscription
+    ) {
         return UserSubscriptionDto.builder()
-                .id(subscription.getId())
-                .userId(subscription.getUserId())
-                .tier(subscription.getTier())
-                .lastSyncAt(subscription.getLastSyncAt())
-                .createdAt(subscription.getCreatedAt())
-                .updatedAt(subscription.getUpdatedAt())
-                .build();
+            .tier(subscription.getTier())
+            .lastSyncAt(subscription.getLastSyncAt())
+            .createdAt(subscription.getCreatedAt())
+            .updatedAt(subscription.getUpdatedAt())
+            .build();
     }
 
     /**
@@ -53,12 +49,11 @@ public class UserSubscriptionDto {
     public static UserSubscriptionDto createBasicSubscription(String userId) {
         String timestamp = LocalDateTime.now().toString();
         return UserSubscriptionDto.builder()
-                .userId(userId)
-                .tier("basic")
-                .createdAt(timestamp)
-                .updatedAt(timestamp)
-                .lastSyncAt(timestamp)
-                .build();
+            .tier("basic")
+            .createdAt(timestamp)
+            .updatedAt(timestamp)
+            .lastSyncAt(timestamp)
+            .build();
     }
 
     /**
@@ -67,10 +62,9 @@ public class UserSubscriptionDto {
     public static UserSubscriptionDto createPremiumSubscription(String userId) {
         String timestamp = LocalDateTime.now().toString();
         return UserSubscriptionDto.builder()
-                .userId(userId)
-                .tier("premium")
-                .createdAt(timestamp)
-                .updatedAt(timestamp)
-                .build();
+            .tier("premium")
+            .createdAt(timestamp)
+            .updatedAt(timestamp)
+            .build();
     }
-} 
+}

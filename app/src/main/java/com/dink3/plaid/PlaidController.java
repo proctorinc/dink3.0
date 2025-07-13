@@ -82,11 +82,9 @@ public class PlaidController {
      * Webhook endpoint for receiving Plaid webhooks
      */
     @PostMapping("/webhook")
-    public ResponseEntity<?> handleWebhook(@RequestBody String webhookData) {
-        log.info("Received webhook: {}", webhookData);
-        
-        // TODO: Implement webhook verification and processing
-        // For now, just acknowledge receipt
+    public ResponseEntity<?> handleWebhook(@RequestBody PlaidWebhookRequest webhook) {
+        log.info("Received webhook: {}", webhook);
+        plaidService.handleWebhook(webhook);
         return ResponseEntity.ok().build();
     }
 } 

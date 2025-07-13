@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: jdbc:sqlite:./dink3-test.db
+    driver-class-name: org.sqlite.JDBC
+    username: ''
+    password: ''
+  jooq:
+    sql-dialect: SQLITE
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+server:
+  port: 0  # Use random port for tests
+jwt:
+  secret: "test-jwt-secret-key-for-testing-only"
+  expiration: 3600000
+plaid:
+  environment: sandbox
+  client-id: "test-plaid-client-id"
+  secret: "test-plaid-secret"
+  webhook-url: "http://localhost:8080/api/v1/plaid/webhook" 

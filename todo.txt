@@ -1,0 +1,18 @@
+Refining
+- add all transactiondata to /transaction
+- add transactions to /accounts. Pagination?
+- add item and accounts to /institutions. Pagination?
+- add demo data that loads in by default (admin, premium, basic, data for all)
+- add tests for the plaid sync functionality
+- implement plaid webhooks support
+
+Features
+- add /category endpoint for category CRUD
+- add transaction categorization
+
+Infrastructure
+- make a UAT setup on a server
+
+Think about
+- design greater idea
+- how will we make it check whether you've accomplished everything for previous months
